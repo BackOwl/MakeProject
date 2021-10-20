@@ -2,7 +2,7 @@ from pico2d import *
 import random
 class BabySlime:
     def __init__(self):
-        self.x, self.y = random.randint(100, 400), 90
+        self.x, self.y = random.randint(300, 400), random.randint(100,300)
         self.frame = 0
         self.now_max_frame = 5
         self.walk ={}
@@ -24,12 +24,12 @@ class BabySlime:
         self.frame = (self.frame + 1) % self.now_max_frame
 
     def draw(self):
-        self.walk[self.frame].clip_draw(0,0, 35, 35, self.x, self.y)
+        self.walk[self.frame].clip_draw(0,0, 35, 35, self.x, self.y,20,20)
         #self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
 
 class Stone:
     def __init__(self):
-        self.x, self.y = random.randint(100, 400), 90
+        self.x, self.y = random.randint(300, 400), random.randint(100,300)
         self.frame = 0
         self.now_max_frame = 7
         self.walk ={}
@@ -56,7 +56,7 @@ class Stone:
         self.walkLeft[self.frame].clip_draw(0,0, 55, 55, self.x, self.y)
         #self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
 
-#'''
+'''
 open_canvas(600, 340)
 
 babyslime = BabySlime()
@@ -74,4 +74,4 @@ while running:
     delay(0.1)
 
 close_canvas()
-#'''
+'''
