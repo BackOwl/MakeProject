@@ -122,13 +122,13 @@ while running:
 
     # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?
     if Will_x_state == 0:
-        mx -= 15
+        mx -= 10
     elif Will_x_state == 1:
-        mx += 15
+        mx += 10
     if Will_y_state == 0:
-        my -= 15
+        my -= 10
     elif Will_y_state == 1:
-        my += 15
+        my += 10
 
 
      # 적들

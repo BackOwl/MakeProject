@@ -96,16 +96,18 @@ def check_attack(Nx, Ny, x, y, want, speed):
     dy = Ny - y
     check = (dx) * (dx) + (dy) * (dy)
     if dx >= 0:
-        dx = 1
+        lx = 1
     else:
-        dx = -1
+        lx = -1
     if dy >= 0:
-        dy = 1
+        ly = 1
     else:
-        dy = -1
+        ly = -1
     want = want * want
+
     if want <= check:  # 거리가 멀때
         state = True
+        '''
         dir = random.randint(0, 3)  # 0 x 1 y 2 xy
         if dir == 0:
             x = x + (dx * speed)
@@ -114,6 +116,16 @@ def check_attack(Nx, Ny, x, y, want, speed):
         elif dir == 2:
             x = x + (dx * speed)
             y = y + (dy * speed)
+    '''
+        A = dy/dx #y = Ax + B
+        if A>=1:
+            A =1
+        elif A <-1:
+            A = -1
+        B = (y-A*x)
+        x= x+ (speed/5)*lx
+        y = A*x +B
+
     else:
         state = False
     return x, y, state
