@@ -20,6 +20,7 @@ class Will:
         self.frame = 0
         self.image0 = load_image('resource/Will/will animation cycle35.35.png')
         self.image1 = load_image('resource/Will/Will_Idle35.35.png')
+        self.image2 = load_image('resource/Will/Will_Roll35.35.png')
 
     def update(self):
         global now_max_frame
@@ -28,16 +29,23 @@ class Will:
         self.y = (1 - 0.5) * will.y + 0.5 * my
 
     def draw(self):
-        global run
+        global run,roll,rolldo
         global Will_direction
-        if run:
-            self.image0.clip_draw(self.frame * 35, Will_direction * 35, 35, 35, self.x, self.y)
-        elif run == False:
-            self.image1.clip_draw(self.frame * 35, Will_direction * 35, 35, 35, self.x, self.y)
+        if roll==False:
+            if run:
+                self.image0.clip_draw(self.frame * 35, Will_direction * 35, 35, 35, self.x, self.y)
+            elif run == False:
+                self.image1.clip_draw(self.frame * 35, Will_direction * 35, 35, 35, self.x, self.y)
+        elif roll == True:
+            self.image2.clip_draw(self.frame * 35, Will_direction * 35, 35, 35, self.x, self.y)
+            rolldo += 1
+            if rolldo == 8:
+                rolldo = 0
+                roll = False
 
 
 def handle_events():  # 키입력
-    global running, run
+    global running, run,roll
     global Will_direction, now_max_frame,Will_x_state,Will_y_state
     global mx, my, will
     events = get_events()
@@ -67,6 +75,7 @@ def handle_events():  # 키입력
                 now_max_frame = 8
                 run = True
                 Will_y_state = 1
+
         if event.type == SDL_KEYUP:
             if event.key == SDLK_LEFT:
                 if Will_x_state == 0:
@@ -88,6 +97,15 @@ def handle_events():  # 키입력
                     run = False
                     now_max_frame = 10
                     Will_y_state = -1
+        if event.key == SDLK_SPACE and event.type == SDL_KEYDOWN:
+            now_max_frame = 8
+            roll = True
+            will.frame = 0
+        if event.key == SDLK_SPACE and event.type == SDL_KEYUP:
+            now_max_frame = 8
+            if Will_y_state == -1 and Will_x_state == -1 and roll == False:
+                now_max_frame = 10
+
 
 '''
 def update_character():
@@ -106,9 +124,11 @@ slime = enemy.BabySlime()
 stone = enemy.Stone()
 mx, my = will.x, will.y
 Will_direction = 1
+rolldo = 0
 Will_x_state = -1
 Will_y_state = -1
 run = False
+roll= False
 # team = [Boy() for i in range(1, 11+1)]
 running = True
 
@@ -123,12 +143,16 @@ while running:
     # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?
     if Will_x_state == 0:
         mx -= 10
+        if roll: will.x -= 15
     elif Will_x_state == 1:
         mx += 10
+        if roll: will.x += 15
     if Will_y_state == 0:
         my -= 10
+        if roll: will.y -= 15
     elif Will_y_state == 1:
         my += 10
+        if roll: will.y += 15
 
 
      # 적들
