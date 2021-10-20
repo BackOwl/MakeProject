@@ -116,7 +116,7 @@ while running:
     # game logic 업데이트자리
     '''for boy in team:
         boy.update()'''
-
+    '''
     if run:
         # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?
         if Will_direction == 2:
@@ -144,6 +144,17 @@ while running:
             if Will_direction_two == 2:
                 mx+=10
 
+    '''
+    if run:
+        # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?
+        if Will_direction == 2:
+            mx -= 15
+        if Will_direction == 3:
+            mx += 15
+        if Will_direction == 1:
+            my -= 15
+        if Will_direction == 0:
+            my += 15
     '''
     if run:
         # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?

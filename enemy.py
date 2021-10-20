@@ -1,6 +1,7 @@
 from pico2d import *
 import random
 
+
 class BabySlime:
     def __init__(self):
         self.x, self.y = random.randint(300, 400), random.randint(100, 300)
@@ -18,16 +19,24 @@ class BabySlime:
             self.attackRight[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Right_%d.png' % (i + 1))
             self.attackLeft[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Left_%d.png' % (i + 1))
 
-    def update(self,mx,my):
+    def update(self, mx, my):
         # global now_max_frame
         self.frame = (self.frame + 1) % self.now_max_frame
-        self.x, self.y ,self.state = check_attack(mx,my,self.x,self.y,30,6)
+        self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 30, 10)
+        self.attack_state = check_state(mx, my, self.x, self.y, self.state)
 
     def draw(self):
-        if self.state ==True:
+        if self.state == True:
             self.walk[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
         else:
-            self.attackUp[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+            if self.attack_state =='Up':
+                self.attackUp[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+            elif self.attack_state == 'Down':
+                self.attackDown[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+            elif self.attack_state == 'Right':
+                self.attackRight[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+            elif self.attack_state == 'Left':
+                self.attackLeft[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
         # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
 
 
@@ -52,16 +61,31 @@ class Stone:
             self.attackRight[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_right_%d.png' % (i + 1))
             self.attackLeft[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_left_%d.png' % (i + 1))
 
-    def update(self,mx,my):
+    def update(self, mx, my):
         # global now_max_frame
         self.frame = (self.frame + 1) % self.now_max_frame
-        self.x,self.y,self.state = check_attack(mx, my, self.x, self.y, 70, 8)
+        self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 70, 8)
+        self.attack_state = check_state(mx, my, self.x, self.y, False)
 
     def draw(self):
-        if self. state == True:
-            self.walkLeft[self.frame].clip_draw(0, 0, 55, 55, self.x, self.y)
+        if self.state == True:
+            if self.attack_state == 'Up':
+                self.walkUp[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+            elif self.attack_state == 'Down':
+                self.walkDown[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+            elif self.attack_state == 'Right':
+                self.walkRight[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+            elif self.attack_state == 'Left':
+                self.walkLeft[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
         else:
-            self.attackUp[self.frame].clip_draw(0, 0, 55, 55, self.x, self.y)
+            if self.attack_state == 'Up':
+                self.attackUp[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+            elif self.attack_state == 'Down':
+                self.attackDown[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+            elif self.attack_state == 'Right':
+                self.attackRight[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+            elif self.attack_state == 'Left':
+                self.attackLeft[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
         # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
 
 
@@ -83,17 +107,39 @@ def check_attack(Nx, Ny, x, y, want, speed):
     if want <= check:  # 거리가 멀때
         state = True
         dir = random.randint(0, 3)  # 0 x 1 y 2 xy
-        if dir ==0:
-            x= x+(dx*speed)
+        if dir == 0:
+            x = x + (dx * speed)
         elif dir == 1:
-            y= y+(dy*speed)
-        elif dir ==2:
+            y = y + (dy * speed)
+        elif dir == 2:
             x = x + (dx * speed)
             y = y + (dy * speed)
     else:
         state = False
-    return x, y,state
+    return x, y, state
 
+
+def check_state(Nx, Ny, x, y, state):
+    # 계산 후 현재 서있는 방향을 기준으로 바라보는 공격 방향을 정해서 내보낸다
+    # state = False일때 방향이 정해져서 멈춘다.
+    attack_state = 'Up'
+    if state == False:
+        dx = Nx - x
+        dy = Ny - y
+        xx = dx * dx
+        yy = dy * dy
+        if xx >= yy:
+            if dx >= 0:
+                # ->
+                attack_state = 'Right'
+            else:
+                attack_state = 'Left'
+        elif xx < yy:
+            if dy >= 0:
+                attack_state = 'Up'
+            else:
+                attack_state = 'Down'
+    return attack_state
 
 
 '''
