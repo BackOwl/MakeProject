@@ -36,57 +36,52 @@ class Will:
 
 def handle_events():  # 키입력
     global running, run
-    global Will_direction, now_max_frame,Will_direction_two
+    global Will_direction, now_max_frame,Will_x_state,Will_y_state#,Will_direction_two
     global mx, my
     events = get_events()
-    left,right,down,up =0,0,0,0 # true 1 false 0
+    #left,right,down,up =0,0,0,0 # true 1 false 0
     for event in events:
         if event.type == SDL_QUIT:
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
         if event.type == SDL_KEYDOWN:
-            if event.key == SDLK_LEFT or event.key == SDLK_RIGHT or event.key == SDLK_UP or event.key == SDLK_DOWN:
-                mx = will.x
-                my = will.y
+            #if event.key == SDLK_LEFT or event.key == SDLK_RIGHT or event.key == SDLK_UP or event.key == SDLK_DOWN:
+                #mx = will.x
+                #my = will.y
             if event.key == SDLK_LEFT:
                 Will_direction = 2
                 now_max_frame = 8
                 run = True
-                left =1
+                Will_x_state = 0
             if event.key == SDLK_RIGHT:
                 Will_direction = 3
                 now_max_frame = 8
                 run = True
-                right =1
+                Will_x_state = 1
             if event.key == SDLK_DOWN:
                 Will_direction = 1
                 now_max_frame = 8
                 run = True
-                down =1
+                Will_y_state = 0
             if event.key == SDLK_UP:
                 Will_direction = 0
                 now_max_frame = 8
                 run = True
-                up = 1
+                Will_y_state = 1
 
         elif event.type == SDL_KEYUP:
             run = False
             now_max_frame = 10
             Will_direction_two = 0
             if event.key == SDLK_LEFT:
-                left = 0
+                Will_x_state = -1
             if event.key == SDLK_RIGHT:
-                right = 0
+                Will_x_state = -1
             if event.key == SDLK_DOWN:
-                down = 0
+                Will_y_state = -1
             if event.key == SDLK_UP:
-                up = 0
-        if left == 1 and up == 1: Will_direction_two = 1
-        if up == 1 and right == 1: Will_direction_two = 2
-        if right == 1 and down == 1: Will_direction_two = 3
-        if down == 1 and left == 1: Will_direction_two = 4
-
+                Will_y_state = -1
 
 def update_character():
     global mx, my
@@ -104,7 +99,8 @@ slime = enemy.BabySlime()
 stone = enemy.Stone()
 mx, my = will.x, will.y
 Will_direction = 1
-Will_direction_two = 0
+Will_x_state = -1
+Will_y_state = -1
 run = False
 # team = [Boy() for i in range(1, 11+1)]
 running = True
@@ -116,77 +112,25 @@ while running:
     # game logic 업데이트자리
     '''for boy in team:
         boy.update()'''
-    '''
-    if run:
-        # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?
-        if Will_direction == 2:
-            mx -= 10
-            if Will_direction_two == 1:
-                my+=10
-            if Will_direction_two == 4:
-                my-=10
-        if Will_direction == 3:
-            mx += 10
-            if Will_direction_two == 2:
-                my+=10
-            if Will_direction_two == 3:
-                my-=10
-        if Will_direction == 1:
-            my -= 10
-            if Will_direction_two == 3:
-                mx+=10
-            if Will_direction_two == 4:
-                mx-=10
-        if Will_direction == 0:
-            my += 10
-            if Will_direction_two == 1:
-                mx-=10
-            if Will_direction_two == 2:
-                mx+=10
 
-    '''
     if run:
         # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?
-        if Will_direction == 2:
+        if Will_x_state == 0:
             mx -= 15
-        if Will_direction == 3:
+        elif Will_x_state == 1:
             mx += 15
-        if Will_direction == 1:
+        if Will_y_state == 0:
             my -= 15
-        if Will_direction == 0:
+        elif Will_y_state ==1:
             my += 15
-    '''
-    if run:
-        # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?
-        if Will_direction_two == 0:
-            if Will_direction == 2:
-                mx -= 10
-            if Will_direction == 3:
-                mx += 10
-            if Will_direction == 1:
-                my -= 10
-            if Will_direction == 0:
-                my += 10
-        else:
-            if Will_direction_two ==1:
-                mx-=10
-                my+=10
-            if Will_direction_two == 2:
-                my+=10
-                mx+=10
-            if Will_direction_two == 3:
-                mx+=10
-                my-=10
-            if Will_direction_two == 4:
-                mx-=10
-                my-=10
-    '''
-    will.update()
+
     update_character()  # 걷기모션
+    will.update()
+
 
     # 적들
-    slime.update(will.x,will.y)
-    stone.update(will.x,will.y)
+    slime.update(will.x, will.y)
+    stone.update(will.x, will.y)
 
     # game drawing
     clear_canvas()
