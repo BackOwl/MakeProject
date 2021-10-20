@@ -25,9 +25,16 @@ class Will:
     def update(self):
         global now_max_frame
         self.frame = (self.frame + 1) % now_max_frame
-        self.x= (1 - 0.5) * will.x + 0.5 * mx
+        #if self.x< 80 :self.x =self.x
+        #elif self.x >500: self.x =self.x
+        #else:
+            #self.x = (1 - 0.5) * will.x + 0.5 * mx
+        #if self.y < 60: self.y =self.y
+        #elif self.y > 310:self.y =self.y
+        #else:
+            #self.y = (1 - 0.5) * will.y + 0.5 * my
+        self.x = (1 - 0.5) * will.x + 0.5 * mx
         self.y = (1 - 0.5) * will.y + 0.5 * my
-
     def draw(self):
         global run,roll,rolldo
         global Will_direction
@@ -39,9 +46,10 @@ class Will:
         elif roll == True:
             self.image2.clip_draw(self.frame * 35, Will_direction * 35, 35, 35, self.x, self.y)
             rolldo += 1
-            if rolldo == 8:
+            if rolldo == 7:
                 rolldo = 0
                 roll = False
+                run = True
 
 
 def handle_events():  # 키입력
