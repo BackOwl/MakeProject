@@ -116,7 +116,7 @@ while running:
     # game logic 업데이트자리
     '''for boy in team:
         boy.update()'''
-    
+
     if run:
         # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?
         if Will_direction == 2:
@@ -174,8 +174,8 @@ while running:
     update_character()  # 걷기모션
 
     # 적들
-    slime.update()
-    stone.update()
+    slime.update(will.x,will.y)
+    stone.update(will.x,will.y)
 
     # game drawing
     clear_canvas()
