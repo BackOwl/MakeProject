@@ -1,5 +1,6 @@
 from pico2d import *
 import random
+import enemy
 
 
 # 내가 게임을 플레이함에 필요한 객체를 꼽아서( 소년, 잔디) 추상화
