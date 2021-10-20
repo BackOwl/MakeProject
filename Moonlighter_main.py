@@ -24,6 +24,8 @@ class Will:
     def update(self):
         global now_max_frame
         self.frame = (self.frame + 1) % now_max_frame
+        self.x= (1 - 0.5) * will.x + 0.5 * mx
+        self.y = (1 - 0.5) * will.y + 0.5 * my
 
     def draw(self):
         global run
@@ -36,19 +38,15 @@ class Will:
 
 def handle_events():  # 키입력
     global running, run
-    global Will_direction, now_max_frame,Will_x_state,Will_y_state#,Will_direction_two
-    global mx, my
+    global Will_direction, now_max_frame,Will_x_state,Will_y_state
+    global mx, my, will
     events = get_events()
-    #left,right,down,up =0,0,0,0 # true 1 false 0
     for event in events:
         if event.type == SDL_QUIT:
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
         if event.type == SDL_KEYDOWN:
-            #if event.key == SDLK_LEFT or event.key == SDLK_RIGHT or event.key == SDLK_UP or event.key == SDLK_DOWN:
-                #mx = will.x
-                #my = will.y
             if event.key == SDLK_LEFT:
                 Will_direction = 2
                 now_max_frame = 8
@@ -69,26 +67,35 @@ def handle_events():  # 키입력
                 now_max_frame = 8
                 run = True
                 Will_y_state = 1
-
-        elif event.type == SDL_KEYUP:
-            run = False
-            now_max_frame = 10
-            Will_direction_two = 0
+        if event.type == SDL_KEYUP:
             if event.key == SDLK_LEFT:
-                Will_x_state = -1
-            if event.key == SDLK_RIGHT:
-                Will_x_state = -1
+                if Will_x_state == 0:
+                    run = False
+                    now_max_frame = 10
+                    Will_x_state = -1
+            elif event.key == SDLK_RIGHT:
+                if Will_x_state == 1:
+                    run = False
+                    now_max_frame = 10
+                    Will_x_state = -1
             if event.key == SDLK_DOWN:
-                Will_y_state = -1
-            if event.key == SDLK_UP:
-                Will_y_state = -1
+                if Will_y_state == 0:
+                    run = False
+                    now_max_frame = 10
+                    Will_y_state = -1
+            elif event.key == SDLK_UP:
+                if Will_y_state == 1:
+                    run = False
+                    now_max_frame = 10
+                    Will_y_state = -1
 
+'''
 def update_character():
     global mx, my
     global will
     will.x = (1 - 0.5) * will.x + 0.5 * mx
     will.y = (1 - 0.5) * will.y + 0.5 * my
-
+'''
 
 # initialization code
 open_canvas(600, 340)
@@ -113,31 +120,32 @@ while running:
     '''for boy in team:
         boy.update()'''
 
-    if run:
-        # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?
-        if Will_x_state == 0:
-            mx -= 15
-        elif Will_x_state == 1:
-            mx += 15
-        if Will_y_state == 0:
-            my -= 15
-        elif Will_y_state ==1:
-            my += 15
-
-    update_character()  # 걷기모션
-    will.update()
+    # 지금 눌릴때 한번밖에 안들어감...계속 들어가게하는법?
+    if Will_x_state == 0:
+        mx -= 15
+    elif Will_x_state == 1:
+        mx += 15
+    if Will_y_state == 0:
+        my -= 15
+    elif Will_y_state == 1:
+        my += 15
 
 
-    # 적들
+     # 적들
     slime.update(will.x, will.y)
     stone.update(will.x, will.y)
+
+    #주인공
+    will.update()
+    #update_character()  # 걷기모션
 
     # game drawing
     clear_canvas()
     grass.draw()
+    will.draw()
     slime.draw()
     stone.draw()
-    will.draw()
+
 
     update_canvas()
 
