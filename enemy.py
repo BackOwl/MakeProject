@@ -3,6 +3,7 @@ import random
 
 
 class BabySlime:
+    image = None
     def __init__(self):
         self.x, self.y = random.randint(300, 400), random.randint(100, 300)
         self.frame = 0
@@ -10,14 +11,14 @@ class BabySlime:
         self.walk = {}
         self.attackUp, self.attackLeft, self.attackRight, self.attackDown = {}, {}, {}, {}
         self.state = 'walk'
-
-        for i in range(0, 5):
-            self.walk[i] = load_image('resource/enemy/orangeslime/forest_babyslime_walk_%d.png' % (i + 1))
-        for i in range(0, 9):
-            self.attackUp[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Up_%d.png' % (i + 1))
-            self.attackDown[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Down_%d.png' % (i + 1))
-            self.attackRight[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Right_%d.png' % (i + 1))
-            self.attackLeft[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Left_%d.png' % (i + 1))
+        if BabySlime.image ==None:
+            for i in range(0, 5):
+                self.walk[i] = load_image('resource/enemy/orangeslime/forest_babyslime_walk_%d.png' % (i + 1))
+            for i in range(0, 9):
+                self.attackUp[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Up_%d.png' % (i + 1))
+                self.attackDown[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Down_%d.png' % (i + 1))
+                self.attackRight[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Right_%d.png' % (i + 1))
+                self.attackLeft[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Left_%d.png' % (i + 1))
 
     def update(self, mx, my):
         # global now_max_frame
@@ -41,6 +42,7 @@ class BabySlime:
 
 
 class Stone:
+    image = None
     def __init__(self):
         self.x, self.y = random.randint(100, 200), random.randint(100, 300)
         self.frame = 0
@@ -49,17 +51,18 @@ class Stone:
         self.attackUp, self.attackLeft, self.attackRight, self.attackDown = {}, {}, {}, {}
         self.walkUp, self.walkLeft, self.walkRight, self.walkDown = {}, {}, {}, {}
         self.state = 'walk'
-        for i in range(0, 7):
-            self.walkUp[i] = load_image('resource/enemy/stone/enemies_golem butler_ floating_ up_0%d.png' % i)
-            self.walkDown[i] = load_image('resource/enemy/stone/enemies_golem butler _floating_ down_0%d.png' % i)
-            self.walkRight[i] = load_image('resource/enemy/stone/enemies_golem butler_floating_ right_0%d.png' % i)
-            self.walkLeft[i] = load_image('resource/enemy/stone/enemies_golem butler_floating_ left_0%d.png' % i)
+        if Stone.image == None:
+            for i in range(0, 7):
+                self.walkUp[i] = load_image('resource/enemy/stone/enemies_golem butler_ floating_ up_0%d.png' % i)
+                self.walkDown[i] = load_image('resource/enemy/stone/enemies_golem butler _floating_ down_0%d.png' % i)
+                self.walkRight[i] = load_image('resource/enemy/stone/enemies_golem butler_floating_ right_0%d.png' % i)
+                self.walkLeft[i] = load_image('resource/enemy/stone/enemies_golem butler_floating_ left_0%d.png' % i)
 
-        for i in range(0, 8):
-            self.attackUp[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_up_%d.png' % (i + 1))
-            self.attackDown[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_down_%d.png' % (i + 1))
-            self.attackRight[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_right_%d.png' % (i + 1))
-            self.attackLeft[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_left_%d.png' % (i + 1))
+            for i in range(0, 8):
+                self.attackUp[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_up_%d.png' % (i + 1))
+                self.attackDown[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_down_%d.png' % (i + 1))
+                self.attackRight[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_right_%d.png' % (i + 1))
+                self.attackLeft[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_left_%d.png' % (i + 1))
 
     def update(self, mx, my):
         # global now_max_frame
