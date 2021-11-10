@@ -105,6 +105,8 @@ def handle_events():  # 키입력
                     run = False
                     now_max_frame = 10
                     Will_y_state = -1
+        #if event.key == SDLK_UP and event.key == SDLK_DOWN and event.key == SDLK_LEFT and event.key == SDLK_RIGHT and event.type == SDL_KEYUP:
+           #run = False
         if event.key == SDLK_SPACE and event.type == SDL_KEYDOWN:
             now_max_frame = 8
             roll = True
