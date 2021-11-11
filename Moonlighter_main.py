@@ -126,7 +126,7 @@ def update_character():
 '''
 
 # initialization code
-open_canvas(600, 340)
+open_canvas(600, 340,sync =True) # 프레임 60고정 
 now_max_frame = 8
 grass = Grass()  # 잔디 객체 생성
 will = Will()
