@@ -25,14 +25,7 @@ class Will:
     def update(self):
         global now_max_frame
         self.frame = (self.frame + 1) % now_max_frame
-        #if self.x< 80 :self.x =self.x
-        #elif self.x >500: self.x =self.x
-        #else:
-            #self.x = (1 - 0.5) * will.x + 0.5 * mx
-        #if self.y < 60: self.y =self.y
-        #elif self.y > 310:self.y =self.y
-        #else:
-            #self.y = (1 - 0.5) * will.y + 0.5 * my
+        
         self.x = (1 - 0.5) * will.x + 0.5 * mx
         self.y = (1 - 0.5) * will.y + 0.5 * my
     def draw(self):
