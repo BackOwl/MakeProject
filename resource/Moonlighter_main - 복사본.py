@@ -10,9 +10,9 @@ class Grass:
         self.image1 = load_image('resource/background/backgroundWalls_Level0.png')
 
     def draw(self):
-        self.image0.clip_draw(0, 0, 580, 360,  600, 300,1200,600)
-        #self.image1.draw(600, 340)
-        self.image1.clip_draw(0, 0,  640, 360, 600, 300,1200,600)
+        self.image0.draw(300, 170)
+        self.image1.draw(300, 170)
+
 
 class Will:
     def __init__(self):
@@ -126,7 +126,7 @@ def update_character():
 '''
 
 # initialization code
-open_canvas(1200, 600,sync =True) # 프레임 60고정
+open_canvas(600, 340,sync =True) # 프레임 60고정
 now_max_frame = 8
 grass = Grass()  # 잔디 객체 생성
 will = Will()
