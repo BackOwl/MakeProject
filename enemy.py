@@ -1,6 +1,20 @@
 from pico2d import *
 import random
+import game_framework
+from boy import Will
 
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+# Boy Action Speed
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
+
+#will = Will()
 
 class BabySlime:
     image = None
@@ -20,25 +34,27 @@ class BabySlime:
                 self.attackRight[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Right_%d.png' % (i + 1))
                 self.attackLeft[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Left_%d.png' % (i + 1))
 
-    def update(self, mx, my):
+    def update(self, mx= 0, my=0):
         # global now_max_frame
-        self.frame = (self.frame + 1) % self.now_max_frame
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
         self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 30, 10)
         self.attack_state = check_state(mx, my, self.x, self.y, self.state)
-
+    def get_bb(self):
+        return self.x - 15, self.y - 15, self.x + 15, self.y + 15
     def draw(self):
         if self.state == True:
-            self.walk[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+            self.walk[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
         else:
             if self.attack_state =='Up':
-                self.attackUp[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+                self.attackUp[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
             elif self.attack_state == 'Down':
-                self.attackDown[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+                self.attackDown[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
             elif self.attack_state == 'Right':
-                self.attackRight[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+                self.attackRight[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
             elif self.attack_state == 'Left':
-                self.attackLeft[self.frame].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+                self.attackLeft[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
         # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
+        draw_rectangle(*self.get_bb())
 
 
 class Stone:
@@ -64,32 +80,36 @@ class Stone:
                 self.attackRight[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_right_%d.png' % (i + 1))
                 self.attackLeft[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_left_%d.png' % (i + 1))
 
-    def update(self, mx, my):
+    def update(self, mx=0, my=0):
         # global now_max_frame
-        self.frame = (self.frame + 1) % self.now_max_frame
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
         self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 70, 8)
         self.attack_state = check_state(mx, my, self.x, self.y, False)
+
+    def get_bb(self):
+        return self.x - 25, self.y - 25, self.x + 25, self.y + 25
 
     def draw(self):
         if self.state == True:
             if self.attack_state == 'Up':
-                self.walkUp[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.walkUp[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
             elif self.attack_state == 'Down':
-                self.walkDown[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.walkDown[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
             elif self.attack_state == 'Right':
-                self.walkRight[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.walkRight[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
             elif self.attack_state == 'Left':
-                self.walkLeft[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.walkLeft[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
         else:
             if self.attack_state == 'Up':
-                self.attackUp[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.attackUp[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
             elif self.attack_state == 'Down':
-                self.attackDown[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.attackDown[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
             elif self.attack_state == 'Right':
-                self.attackRight[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.attackRight[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
             elif self.attack_state == 'Left':
-                self.attackLeft[self.frame].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.attackLeft[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
         # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
+        draw_rectangle(*self.get_bb())
 
 
 def check_attack(Nx, Ny, x, y, want, speed):
@@ -116,7 +136,7 @@ def check_attack(Nx, Ny, x, y, want, speed):
         elif A <-1:
             A = -1
         B = (y-A*x)
-        x= x+ (speed/5)*lx
+        x= x+ (speed/5)*lx * game_framework.frame_time
         y = A*x +B
 
     else:

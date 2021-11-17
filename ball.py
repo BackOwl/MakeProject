@@ -27,8 +27,6 @@ class Ball:
 
     def get_bb(self):
         pass
-
-
     #return 0,0,0,0
 
     def draw(self):

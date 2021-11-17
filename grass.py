@@ -1,4 +1,6 @@
 from pico2d import *
+import game_world
+import enemy
 
 class Grass:
     def __init__(self):
@@ -7,6 +9,12 @@ class Grass:
 
     def update(self):
         pass
+
+    def monster(self):
+        monster1 = enemy.BabySlime()
+        monster2 = enemy.Stone()
+        game_world.add_object(monster1, 2)
+        game_world.add_object(monster2, 1)
 
 
     def draw(self):

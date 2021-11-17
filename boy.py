@@ -201,8 +201,8 @@ class JumpState:
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,  SPACE_DOWN: IdleState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState},
-    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState, SPACE_DOWN: JumpState,
-               UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState},
+    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE_DOWN: JumpState,
+               UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: IdleState, DOWN_DOWN: IdleState},
     JumpState: {RIGHT_UP: RunState,LEFT_UP: RunState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,JUMP_TIMER: RunState}
 }
@@ -230,8 +230,7 @@ class Will:
 
     def get_bb(self):
         # fill here
-
-        return 0, 0, 0, 0
+        return self.x - 15, self.y - 15, self.x + 15, self.y + 15
 
     def depend(self):
         pass
@@ -250,8 +249,8 @@ class Will:
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
-        for ball in self.team:
-            ball.update()
+        #for ball in self.team:
+            #ball.update()
 
     def draw(self):
         self.cur_state.draw(self)
@@ -260,7 +259,7 @@ class Will:
         #for ball in self.team:
             #ball.draw()
         #fill here
-        #draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.get_bb())
 
 
     def handle_event(self, event):
