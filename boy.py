@@ -20,7 +20,7 @@ FRAMES_PER_ACTION = 8
 
 # Boy Event
 RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP,UP_DOWN, DOWN_DOWN,DOWN_UP,UP_UP,SPACE_DOWN, JUMP_TIMER \
-    ,ATTACK_DOWN,ATTACK_UP= range(12)
+    ,ATTACK_DOWN,ATTACK_UP,DEAD_HP= range(13)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
@@ -208,7 +208,6 @@ class JumpState:
             will.attack_score =0
 
 class AttackState:
-
     def enter(will, event):
         if event == RIGHT_DOWN:
             will.now_max_frame = 8
@@ -296,17 +295,44 @@ class AttackState:
             will.attack_score =0
         delay(0.1)
 
+class DeadState:
+    def enter(will, event):
+
+        pass
+
+    def exit(will, event):
+        pass
+
+    def do(will):
+        will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)
+        if will.frame >=10:
+            will.frame =10
+
+
+    def draw(will):
+        will.die[int(will.frame)].clip_draw(0,0, 35, 35, will.x, will.y)
+        delay(0.1)
+
+
+
+
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,  SPACE_DOWN: IdleState,
-                UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState},
+                UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
+                DEAD_HP: DeadState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState, SPACE_DOWN: JumpState,
-               UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState},
+               UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
+               DEAD_HP: DeadState},
     JumpState: {RIGHT_UP: RunState,LEFT_UP: RunState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,SPACE_DOWN: JumpState,JUMP_TIMER: RunState,
-                ATTACK_DOWN: AttackState, ATTACK_UP: RunState},
+                ATTACK_DOWN: AttackState, ATTACK_UP: RunState,DEAD_HP: DeadState},
     AttackState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE_DOWN: JumpState,
-                UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState}
+                UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
+                  DEAD_HP: DeadState},
+    DeadState:{RIGHT_UP: DeadState, LEFT_UP: DeadState, RIGHT_DOWN: DeadState, LEFT_DOWN: DeadState, SPACE_DOWN: DeadState,
+                UP_UP: DeadState, DOWN_UP: DeadState, UP_DOWN: DeadState, DOWN_DOWN: DeadState,ATTACK_DOWN: DeadState, ATTACK_UP: DeadState,
+                  DEAD_HP: DeadState}
 
 }
 
@@ -322,9 +348,10 @@ class Will:
         self.short_solder_up = {};self.short_solder_down = {};self.short_solder_right = {};self.short_solder_left = {};
         self.long_up ={};self.long_down ={};self.long_right ={};self.long_left ={};
         self.long_toxin_up = {};self.long_toxin_down = {};self.long_toxin_right = {};self.long_toxin_left = {};
-        self.die= load_image('resource/Will/Death of Will_Export33.41.png')
+        self.die= {}
         self.state = 'big'
         self.attack_count =0
+        self.HP = 100
         for i in range(0, 40):
             self.long_up[i] = load_image('resource/Will/bigsword/Will_BigSwordCombo_Animation_up_%d.png' % (i+1))
             self.long_down[i] = load_image('resource/Will/bigsword/Will_BigSwordCombo_Animation_Down_%d.png' % (i + 1))
@@ -347,7 +374,8 @@ class Will:
         self.attack_image ={}
         for i in range(0, 4):
             self.attack_image[i] = load_image('resource/Will/Will_Idle_attacked_%d.png' % (i))
-
+        for i in range(11):
+            self.die[i] = load_image('resource/Will/Die/Death of Will_Export_%d.png' % (i+1))
         self.font = load_font('ENCR10B.TTF', 16)
         self.dir = 1
         self.velocity_x = 0
@@ -375,6 +403,10 @@ class Will:
     def attacked(self):
         self.attack_image[self.direction].clip_draw(0, 0, 35, 35, self.x, self.y)
         self.attack_score =1
+        self.HP -=1
+        if self.HP <= 0:
+            self.add_event(DEAD_HP)
+            self.HP =0
         print("attacked")
 
 
@@ -394,6 +426,7 @@ class Will:
     def draw(self):
         self.cur_state.draw(self)
         self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
+        self.font.draw(self.x - 60, self.y + 70, '(HP: %3.2f)' % self.HP, (255, 0, 0))
         debug_print('velocity_x :' + str(self.velocity_x) + '  Dir:' + str(self.dir) + 'State: ' + self.cur_state.__name__+' frame :'+
                     str(self.now_max_frame))
         #for ball in self.team:
