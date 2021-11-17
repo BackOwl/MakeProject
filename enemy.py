@@ -1,6 +1,7 @@
 from pico2d import *
 import random
 import game_framework
+import main_state
 from boy import Will
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -39,6 +40,9 @@ class BabySlime:
         # global now_max_frame
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
         self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 30+self.random, 30)
+        if self.state == False:
+            if main_state.collide(will, self) == False:
+                will.attacked()
 
         self.attack_state = check_state(will.x, will.y, self.x, self.y, self.state)
     def get_bb(self):
@@ -89,6 +93,9 @@ class Stone:
         self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 50+self.random, 40)
 
         self.attack_state = check_state(will.x, will.y,self.x, self.y, False)
+        if self.state == False:
+            if main_state.collide(will, self)==False:
+                will.attacked()
 
     def get_bb(self):
         return self.x - 25, self.y - 25, self.x + 25, self.y + 25

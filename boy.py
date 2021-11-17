@@ -90,6 +90,9 @@ class IdleState:
 
     def draw(will):
         will.image1.clip_draw(int(will.frame)* 35, will.direction * 35, 35, 35, will.x, will.y)
+        if will.attack_score ==1:
+            will.attack_image[will.direction].clip_draw(0, 0, 35, 35, will.x, will.y)
+            will.attack_score =0
 
 
 class RunState:
@@ -142,7 +145,9 @@ class RunState:
 
     def draw(will):
         will.image0.clip_draw(int(will.frame) * 35, will.direction * 35, 35, 35, will.x, will.y)
-
+        if will.attack_score ==1:
+            will.attack_image[will.direction].clip_draw(0, 0, 35, 35, will.x, will.y)
+            will.attack_score =0
 class JumpState:
 
     def enter(will, event):
@@ -198,7 +203,9 @@ class JumpState:
 
     def draw(will):
         will.image2.clip_draw(int(will.frame) * 35, will.direction * 35, 35, 35, will.x, will.y)
-
+        if will.attack_score ==1:
+            will.attack_image[will.direction].clip_draw(0, 0, 35, 35, will.x, will.y)
+            will.attack_score =0
 
 class AttackState:
 
@@ -284,7 +291,9 @@ class AttackState:
             elif will.direction == 0:
                 will.long_up[int(will.frame)].clip_draw(0, 0, 35, 35, will.x, will.y)
                 will.long_toxin_up[int(will.frame)].clip_draw(0, 0, 60, 60, will.x, will.y)
-
+        if will.attack_score ==1:
+            will.attack_image[will.direction].clip_draw(0, 0, 35, 35, will.x, will.y)
+            will.attack_score =0
         delay(0.1)
 
 
@@ -321,10 +330,10 @@ class Will:
             self.long_down[i] = load_image('resource/Will/bigsword/Will_BigSwordCombo_Animation_Down_%d.png' % (i + 1))
             self.long_right[i] = load_image('resource/Will/bigsword/Will_BigSwordCombo_Animation_Right_%d.png' % (i + 1))
             self.long_left[i] = load_image('resource/Will/bigsword/Will_BigSwordCombo_Animation_Left_%d.png' % (i + 1))
-            self.long_toxin_up[i] = ('resource/Will/bigsword/toxi/ToxicBigSwordCombo_Main_Up_%d.png' % (i+1))
-            self.long_toxin_down[i] = ('resource/Will/bigsword/toxi/ToxicBigSwordCombo_Main_Down_%d.png' % (i+1))
-            self.long_toxin_right[i] = ('resource/Will/bigsword/toxi/ToxicBigSwordCombo_Main_Right_%d.png' % (i+1))
-            self.long_toxin_left[i] = ('resource/Will/bigsword/toxi/ToxicBigSwordCombo_Main_Left_%d.png' % (i+1))
+            self.long_toxin_up[i] = load_image('resource/Will/bigsword/toxi/ToxicBigSwordCombo_Main_Up_%d.png' % (i+1))
+            self.long_toxin_down[i] = load_image('resource/Will/bigsword/toxi/ToxicBigSwordCombo_Main_Down_%d.png' % (i+1))
+            self.long_toxin_right[i] = load_image('resource/Will/bigsword/toxi/ToxicBigSwordCombo_Main_Right_%d.png' % (i+1))
+            self.long_toxin_left[i] = load_image('resource/Will/bigsword/toxi/ToxicBigSwordCombo_Main_Left_%d.png' % (i+1))
         for i in range(0, 18):
             self.short_up[i] = load_image('resource/Will/shortsword/Will_ShortSwordCombo_Animation_Up_%d.png' % (i+1))
             self.short_down[i] = load_image('resource/Will/shortsword/Will_ShortSwordCombo_Animation_Down_%d.png' % (i+1))
@@ -334,6 +343,10 @@ class Will:
             self.short_solder_down[i] = load_image('resource/Will/shortsword/solder/SoldierShortSwordCombo_Main_Down_%d.png' % (i+1))
             self.short_solder_right[i] = load_image('resource/Will/shortsword/solder/SoldierShortSwordCombo_Main_Right_%d.png' % (i+1))
             self.short_solder_left[i] = load_image('resource/Will/shortsword/solder/SoldierShortSwordCombo_Main_Left_%d.png' % (i+1))
+
+        self.attack_image ={}
+        for i in range(0, 4):
+            self.attack_image[i] = load_image('resource/Will/Will_Idle_attacked_%d.png' % (i))
 
         self.font = load_font('ENCR10B.TTF', 16)
         self.dir = 1
@@ -346,6 +359,8 @@ class Will:
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
+        self.attack_score = 0
+
         self.team = [Ball() for i in range(5)]
 
     def get_bb(self):
@@ -357,6 +372,10 @@ class Will:
     #def roll(self):
         #ball = Ball(self.x, self.y, self.dir * RUN_SPEED_PPS * 10)
         #game_world.add_object(ball, 1)
+    def attacked(self):
+        self.attack_image[self.direction].clip_draw(0, 0, 35, 35, self.x, self.y)
+        self.attack_score =1
+        print("attacked")
 
 
     def add_event(self, event):
