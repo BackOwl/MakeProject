@@ -19,21 +19,23 @@ FRAMES_PER_ACTION = 8
 
 
 # Boy Event
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP,UP_DOWN, DOWN_DOWN,DOWN_UP,UP_UP,SPACE = range(9)
+RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP,UP_DOWN, DOWN_DOWN,DOWN_UP,UP_UP,SPACE_DOWN, JUMP_TIMER = range(10)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
     (SDL_KEYDOWN, SDLK_LEFT): LEFT_DOWN,
     (SDL_KEYDOWN, SDLK_UP): UP_DOWN,
     (SDL_KEYDOWN, SDLK_DOWN): DOWN_DOWN,
+    (SDL_KEYDOWN, SDLK_SPACE): SPACE_DOWN,
+
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
     (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
     (SDL_KEYUP, SDLK_UP): UP_UP,
     (SDL_KEYUP, SDLK_DOWN): DOWN_UP,
-    (SDL_KEYDOWN, SDLK_SPACE): SPACE
+    #(SDL_KEYUP, SDLK_SPACE): SPACE_UP
 }
 
-
+# 가만히 10, 굴리기 10, 뛰기 8
 # Boy States
 
 class IdleState:
@@ -73,8 +75,9 @@ class IdleState:
             will.direction = 1
 
     def exit(will, event):
-        if event == SPACE:
-            will.depend()
+        # if event == SPACE_DOWN: // 방패
+            #will.depend()
+        pass
 
     def do(will):
         will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % will.now_max_frame
@@ -117,10 +120,12 @@ class RunState:
             will.now_max_frame = 10
         will.dir = clamp(-1, will.velocity_x, 1)
         will.dir = clamp(-1, will.velocity_y, 1)
+        will.jumptimer = 800
 
     def exit(will, event):
-        if event == SPACE:
-            will.depend()
+        pass
+        #if event == SPACE:
+            #will.depend() // 방패
 
     def do(will):
         #will.frame = (will.frame + 1) % 8
@@ -133,14 +138,73 @@ class RunState:
     def draw(will):
         will.image0.clip_draw(int(will.frame) * 35, will.direction * 35, 35, 35, will.x, will.y)
 
+class JumpState:
+
+    def enter(will, event):
+        if event == RIGHT_DOWN:
+            will.velocity_x += RUN_SPEED_PPS
+            will.now_max_frame = 8
+            will.direction = 3
+        elif event == LEFT_DOWN:
+            will.direction = 2
+            will.now_max_frame = 8
+            will.velocity_x -= RUN_SPEED_PPS
+        elif event == RIGHT_UP:
+            will.now_max_frame = 10
+            will.velocity_x -= RUN_SPEED_PPS
+        elif event == LEFT_UP:
+            will.now_max_frame = 10
+            will.velocity_x += RUN_SPEED_PPS
+        if event == UP_DOWN:
+            will.direction = 0
+            will.now_max_frame = 8
+            will.velocity_y += RUN_SPEED_PPS
+        elif event == DOWN_DOWN:
+            will.direction = 1
+            will.now_max_frame = 8
+            will.velocity_y -= RUN_SPEED_PPS
+        elif event == UP_UP:
+            will.now_max_frame =10
+            will.velocity_y -= RUN_SPEED_PPS
+        elif event == DOWN_UP:
+            will.velocity_y += RUN_SPEED_PPS
+            will.now_max_frame = 10
+        will.dir = clamp(-1, will.velocity_x, 1)
+        will.dir = clamp(-1, will.velocity_y, 1)
+        will.frame = 0
+        will.jumptimer =500
+
+
+    def exit(will, event):
+        pass
+        #if event == SPACE:
+            #will.depend() // 방패
+
+    def do(will):
+        #will.frame = (will.frame + 1) % 8
+        will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % will.now_max_frame
+        will.x = (1 - 0.5) * will.x + 0.5 * (will.x+will.velocity_x*2*game_framework.frame_time)
+        will.y = (1 - 0.5) * will.y + 0.5 * (will.y+will.velocity_y*2*game_framework.frame_time)
+        #will.x += will.velocity * game_framework.frame_time
+        will.jumptimer -= 5
+        if will.jumptimer ==0:
+            will.add_event(JUMP_TIMER)
+        will.x = clamp(25, will.x, 1600 - 25)
+
+    def draw(will):
+        will.image2.clip_draw(int(will.frame) * 35, will.direction * 35, 35, 35, will.x, will.y)
+
+
 
 
 
 next_state_table = {
-    IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,  SPACE: IdleState,
+    IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,  SPACE_DOWN: IdleState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState},
-    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: RunState,
-               UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: IdleState, DOWN_DOWN: IdleState}
+    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState, SPACE_DOWN: JumpState,
+               UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState},
+    JumpState: {RIGHT_UP: RunState,LEFT_UP: RunState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
+                UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,JUMP_TIMER: RunState}
 }
 
 class Will:
@@ -157,6 +221,7 @@ class Will:
         self.velocity_y = 0
         self.direction = 1
         self.frame = 0
+        self.jumptimer= 0
         self.now_max_frame = 8
         self.event_que = []
         self.cur_state = IdleState
@@ -191,9 +256,11 @@ class Will:
     def draw(self):
         self.cur_state.draw(self)
         self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
+        debug_print('velocity_x :' + str(self.velocity_x) + '  Dir:' + str(self.dir) + 'State: ' + self.cur_state.__name__)
         #for ball in self.team:
             #ball.draw()
         #fill here
+        #draw_rectangle(*self.get_bb())
 
 
     def handle_event(self, event):
