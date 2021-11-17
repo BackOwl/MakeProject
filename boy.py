@@ -58,20 +58,20 @@ class IdleState:
             will.now_max_frame = 8
             will.velocity_y -= RUN_SPEED_PPS
         elif event == RIGHT_UP:
-            will.now_max_frame = 10
+            will.now_max_frame = 8#
             will.velocity_x -= RUN_SPEED_PPS
             will.direction = 3
         elif event == LEFT_UP:
-            will.now_max_frame = 10
+            will.now_max_frame = 8#
             will.velocity_x += RUN_SPEED_PPS
             will.direction = 2
         elif event == UP_UP:
-            will.now_max_frame = 10
+            will.now_max_frame = 8#
             will.velocity_y -= RUN_SPEED_PPS
             will.direction = 0
         elif event == DOWN_UP:
             will.velocity_y += RUN_SPEED_PPS
-            will.now_max_frame = 10
+            will.now_max_frame = 8#
             will.direction = 1
 
     def exit(will, event):
@@ -99,10 +99,10 @@ class RunState:
             will.now_max_frame = 8
             will.velocity_x -= RUN_SPEED_PPS
         elif event == RIGHT_UP:
-            will.now_max_frame = 10
+            will.now_max_frame = 8#
             will.velocity_x -= RUN_SPEED_PPS
         elif event == LEFT_UP:
-            will.now_max_frame = 10
+            will.now_max_frame = 8#
             will.velocity_x += RUN_SPEED_PPS
         if event == UP_DOWN:
             will.direction = 0
@@ -113,11 +113,11 @@ class RunState:
             will.now_max_frame = 8
             will.velocity_y -= RUN_SPEED_PPS
         elif event == UP_UP:
-            will.now_max_frame = 10
+            will.now_max_frame = 8#
             will.velocity_y -= RUN_SPEED_PPS
         elif event == DOWN_UP:
             will.velocity_y += RUN_SPEED_PPS
-            will.now_max_frame = 10
+            will.now_max_frame = 8#
         will.dir = clamp(-1, will.velocity_x, 1)
         will.dir = clamp(-1, will.velocity_y, 1)
         will.jumptimer = 800
@@ -150,10 +150,10 @@ class JumpState:
             will.now_max_frame = 8
             will.velocity_x -= RUN_SPEED_PPS
         elif event == RIGHT_UP:
-            will.now_max_frame = 10
+            will.now_max_frame = 8#
             will.velocity_x -= RUN_SPEED_PPS
         elif event == LEFT_UP:
-            will.now_max_frame = 10
+            will.now_max_frame = 8#
             will.velocity_x += RUN_SPEED_PPS
         if event == UP_DOWN:
             will.direction = 0
@@ -164,7 +164,7 @@ class JumpState:
             will.now_max_frame = 8
             will.velocity_y -= RUN_SPEED_PPS
         elif event == UP_UP:
-            will.now_max_frame =10
+            will.now_max_frame =8#
             will.velocity_y -= RUN_SPEED_PPS
         elif event == DOWN_UP:
             will.velocity_y += RUN_SPEED_PPS
@@ -172,7 +172,7 @@ class JumpState:
         will.dir = clamp(-1, will.velocity_x, 1)
         will.dir = clamp(-1, will.velocity_y, 1)
         will.frame = 0
-        will.jumptimer =500
+        will.jumptimer =400
 
 
     def exit(will, event):
@@ -242,7 +242,7 @@ class Will:
     def add_event(self, event):
         self.event_que.insert(0, event)
 
-    def update(self, mx=0, my=0):
+    def update(self, will):
         self.cur_state.do(self)
         if len(self.event_que) > 0:
             event = self.event_que.pop()

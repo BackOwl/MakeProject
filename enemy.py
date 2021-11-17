@@ -35,12 +35,12 @@ class BabySlime:
                 self.attackRight[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Right_%d.png' % (i + 1))
                 self.attackLeft[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Left_%d.png' % (i + 1))
 
-    def update(self, mx= 0, my=0):
+    def update(self, will):
         # global now_max_frame
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
-        self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 30, 30)
+        self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 30+self.random, 30)
 
-        self.attack_state = check_state(mx, my, self.x, self.y, self.state)
+        self.attack_state = check_state(will.x, will.y, self.x, self.y, self.state)
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
     def draw(self):
@@ -69,7 +69,7 @@ class Stone:
         self.attackUp, self.attackLeft, self.attackRight, self.attackDown = {}, {}, {}, {}
         self.walkUp, self.walkLeft, self.walkRight, self.walkDown = {}, {}, {}, {}
         self.state = 'walk'
-        self.random = random.randint(0, 5)
+        self.random = random.randint(0, 10)
         if Stone.image == None:
             for i in range(0, 7):
                 self.walkUp[i] = load_image('resource/enemy/stone/enemies_golem butler_ floating_ up_0%d.png' % i)
@@ -83,12 +83,12 @@ class Stone:
                 self.attackRight[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_right_%d.png' % (i + 1))
                 self.attackLeft[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_left_%d.png' % (i + 1))
 
-    def update(self, mx=0, my=0):
+    def update(self, will):
         # global now_max_frame
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
-        self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 50, 40)
+        self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 50+self.random, 40)
 
-        self.attack_state = check_state(mx, my, self.x, self.y, False)
+        self.attack_state = check_state(will.x, will.y,self.x, self.y, False)
 
     def get_bb(self):
         return self.x - 25, self.y - 25, self.x + 25, self.y + 25

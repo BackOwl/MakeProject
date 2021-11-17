@@ -1,5 +1,6 @@
 from pico2d import *
 import random
+import main_state
 import game_framework
 from boy import Will
 
@@ -16,43 +17,38 @@ FRAMES_PER_ACTION = 8
 
 #will = Will()
 
-class BabySlime:
+class Hanari:
     image = None
     def __init__(self):
         self.x, self.y = random.randint(300, 400), random.randint(100, 300)
-        self.frame = 0
+        self.random = random.randint(0,1)
         self.now_max_frame = 5
-        self.walk = {}
+        self.walk1 = {}
+        self.walk2 = {}
+        self.broken ={}
         self.attackUp, self.attackLeft, self.attackRight, self.attackDown = {}, {}, {}, {}
         self.state = 'walk'
-        if BabySlime.image ==None:
-            for i in range(0, 5):
-                self.walk[i] = load_image('resource/enemy/orangeslime/forest_babyslime_walk_%d.png' % (i + 1))
-            for i in range(0, 9):
-                self.attackUp[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Up_%d.png' % (i + 1))
-                self.attackDown[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Down_%d.png' % (i + 1))
-                self.attackRight[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Right_%d.png' % (i + 1))
-                self.attackLeft[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Left_%d.png' % (i + 1))
-
-    def update(self, mx= 0, my=0):
+        if Hanari.image ==None:
+            self.walk1 = load_image('resource/background/object/Dungeon1_Breakable_1.png')
+            self.walk2 = load_image('resource/background/object/Dungeon1_Breakable_2.png')
+            self.broken = load_image('resource/background/object/Dungeon1_Breakable_Rest.png')
+    def update(self, will):
         # global now_max_frame
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
-        self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 30, 10)
-        self.attack_state = check_state(mx, my, self.x, self.y, self.state)
+        if main_state.collide(will,self)==True:
+            self.state = 'break'
+        #self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
+
     def get_bb(self):
-        return self.x - 15, self.y - 15, self.x + 15, self.y + 15
+        return self.x - 10, self.y - 15, self.x + 10, self.y + 15
     def draw(self):
-        if self.state == True:
-            self.walk[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
-        else:
-            if self.attack_state =='Up':
-                self.attackUp[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
-            elif self.attack_state == 'Down':
-                self.attackDown[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
-            elif self.attack_state == 'Right':
-                self.attackRight[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
-            elif self.attack_state == 'Left':
-                self.attackLeft[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
-        # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
-        draw_rectangle(*self.get_bb())
+        #self.walk1.draw(100,190)
+        if self.state =='walk':
+            if self.random ==1:
+                self.walk1.clip_draw(0, 0, 26, 35, self.x, self.y )
+            else:
+                self.walk2.clip_draw(0, 0, 26, 35, self.x, self.y)
+        elif self.state == 'break':
+            self.broken.clip_draw(0, 0, 26, 35, self.x, self.y)
+            # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
+            draw_rectangle(*self.get_bb())
 

@@ -9,12 +9,14 @@ import game_world
 from boy import Will
 from grass import Grass
 from enemy import BabySlime, Stone
+from object import Hanari
 from ball import Ball
 
 name = "MainState"
 
 will = None
 grass = None
+break_objects = []
 monsters = []
 
 balls = []
@@ -43,9 +45,14 @@ def enter():
     grass = Grass()
     game_world.add_object(grass, 0)
 
-    global monster
+    global monsters
     monsters = [BabySlime() for i in range(5)]+[Stone() for i in range(3)]
     game_world.add_objects(monsters, 1)
+
+    global break_objects
+    break_objects = [Hanari() for i in range(5)]
+    game_world.add_objects(break_objects, 1)
+
 
 
 
@@ -79,10 +86,14 @@ def handle_events():
 
 
 def update():
-    global will
-    global monsters
     for game_object in game_world.all_objects():
-        game_object.update(will.x, will.y)
+        game_object.update(will)
+
+    for monster in monsters:
+        if collide(will, monster):
+            print("COLLISION")
+            monsters.remove(monster)
+            game_world.remove_object(monster)
 
 
 
