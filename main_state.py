@@ -9,7 +9,7 @@ import game_world
 from boy import Will
 from grass import Grass
 from enemy import BabySlime, Stone
-from object import Hanari
+from object import Hanari,Sword
 from ball import Ball
 
 name = "MainState"
@@ -50,7 +50,7 @@ def enter():
     game_world.add_objects(monsters, 1)
 
     global break_objects
-    break_objects = [Hanari() for i in range(5)]
+    break_objects = [Hanari() for i in range(5)]+[Sword() for i in range(1)]
     game_world.add_objects(break_objects, 1)
 
 

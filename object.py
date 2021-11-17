@@ -52,3 +52,38 @@ class Hanari:
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
             draw_rectangle(*self.get_bb())
 
+class Sword:
+    image = None
+    def __init__(self):
+        self.x, self.y = random.randint(100, 1000), random.randint(100, 400)
+        self.now_max_frame = 3
+        self.walk1 = {}
+        self.frame=0
+        self.broken ={}
+        self.attackUp, self.attackLeft, self.attackRight, self.attackDown = {}, {}, {}, {}
+        self.state = 'walk'
+        if Hanari.image ==None:
+            self.walk1 = load_image('resource/background/object/Dungeon1_BreakableStuff_8.png')
+            self.broken[0] = load_image('resource/background/object/Dungeon1_BreakableStuff_9.png')
+            self.broken[1] = load_image('resource/background/object/Dungeon1_BreakableStuff_Particle_3.png')
+            self.broken[2] = load_image('resource/background/object/Dungeon1_BreakableStuff_Particle_4.png')
+    def update(self, will):
+        # global now_max_frame
+        if main_state.collide(will,self)==True:
+            self.state = 'break'
+            if self.state == 'break':
+                if self.frame ==2:
+                    self.frame =2
+                self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
+
+    def get_bb(self):
+        return self.x - 10, self.y - 20, self.x + 10, self.y + 20
+    def draw(self):
+        #self.walk1.draw(100,190)
+        if self.state =='walk':
+            self.walk1.clip_draw(0, 0, 17, 29, self.x, self.y )
+        elif self.state == 'break':
+            self.broken[int(self.frame)].clip_draw(0, 0, 17, 29, self.x, self.y)
+            # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
+            draw_rectangle(*self.get_bb())
+
