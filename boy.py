@@ -20,7 +20,7 @@ FRAMES_PER_ACTION = 8
 
 # Boy Event
 RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP,UP_DOWN, DOWN_DOWN,DOWN_UP,UP_UP,SPACE_DOWN, JUMP_TIMER \
-    ,ATTACK_DOWN,ATTACK_UP,DEAD_HP= range(13)
+    ,ATTACK_DOWN,ATTACK_UP,DEAD_HP,CHANGE_SWORD= range(14)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
@@ -29,6 +29,7 @@ key_event_table = {
     (SDL_KEYDOWN, SDLK_DOWN): DOWN_DOWN,
     (SDL_KEYDOWN, SDLK_SPACE): SPACE_DOWN,
     (SDL_KEYDOWN, SDLK_q):ATTACK_DOWN,
+    (SDL_KEYDOWN, SDLK_r):CHANGE_SWORD,
 
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
     (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
@@ -79,6 +80,7 @@ class IdleState:
             will.now_max_frame = 8#
             will.direction = 1
 
+
     def exit(will, event):
         # if event == SPACE_DOWN: // 방패
             #will.depend()
@@ -126,6 +128,7 @@ class RunState:
         elif event == DOWN_UP:
             will.velocity_y += RUN_SPEED_PPS
             will.now_max_frame = 8#
+
         will.dir = clamp(-1, will.velocity_x, 1)
         will.dir = clamp(-1, will.velocity_y, 1)
         will.jumptimer = 800
@@ -229,6 +232,7 @@ class AttackState:
             will.now_max_frame = 8#
         elif event == DOWN_UP:
             will.now_max_frame = 8#
+
         will.jumptimer = 1600
         will.attack_count+=1
         if will.state == 'short':
@@ -313,26 +317,44 @@ class DeadState:
         will.die[int(will.frame)].clip_draw(0,0, 35, 35, will.x, will.y)
         delay(0.1)
 
+class ChangeSword:
+    def enter(will, event):
+        pass
 
-
+    def exit(will, event):
+        pass
+    def do(will):
+        if will.state == 'big':
+            will.state = 'short'
+            will.add_event(CHANGE_SWORD)
+            print(will.state)
+        elif will.state == 'short':
+            will.state = 'big'
+            print(will.state)
+            will.add_event(CHANGE_SWORD)
+    def draw(will):
+        pass
 
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,  SPACE_DOWN: IdleState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
-                DEAD_HP: DeadState},
+                DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState, SPACE_DOWN: JumpState,
                UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
-               DEAD_HP: DeadState},
+               DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword},
     JumpState: {RIGHT_UP: RunState,LEFT_UP: RunState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,SPACE_DOWN: JumpState,JUMP_TIMER: RunState,
-                ATTACK_DOWN: AttackState, ATTACK_UP: RunState,DEAD_HP: DeadState},
+                ATTACK_DOWN: AttackState, ATTACK_UP: RunState,DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword},
     AttackState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE_DOWN: JumpState,
                 UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
-                  DEAD_HP: DeadState},
+                  DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword},
     DeadState:{RIGHT_UP: DeadState, LEFT_UP: DeadState, RIGHT_DOWN: DeadState, LEFT_DOWN: DeadState, SPACE_DOWN: DeadState,
                 UP_UP: DeadState, DOWN_UP: DeadState, UP_DOWN: DeadState, DOWN_DOWN: DeadState,ATTACK_DOWN: DeadState, ATTACK_UP: DeadState,
-                  DEAD_HP: DeadState}
+                  DEAD_HP: DeadState,CHANGE_SWORD:DeadState},
+    ChangeSword:{RIGHT_UP: IdleState, LEFT_UP: IdleState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE_DOWN: RunState,
+                UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: IdleState, DOWN_DOWN: RunState,ATTACK_DOWN: RunState, ATTACK_UP: IdleState,
+                  DEAD_HP: DeadState,CHANGE_SWORD:IdleState}
 
 }
 
@@ -425,7 +447,6 @@ class Will:
 
     def draw(self):
         self.cur_state.draw(self)
-        self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
         self.font.draw(self.x - 60, self.y + 70, '(HP: %3.2f)' % self.HP, (255, 0, 0))
         debug_print('velocity_x :' + str(self.velocity_x) + '  Dir:' + str(self.dir) + 'State: ' + self.cur_state.__name__+' frame :'+
                     str(self.now_max_frame))
