@@ -201,10 +201,10 @@ class JumpState:
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,  SPACE_DOWN: IdleState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState},
-    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE_DOWN: JumpState,
-               UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: IdleState, DOWN_DOWN: IdleState},
+    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState, SPACE_DOWN: JumpState,
+               UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState},
     JumpState: {RIGHT_UP: RunState,LEFT_UP: RunState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
-                UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,JUMP_TIMER: RunState}
+                UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,SPACE_DOWN: JumpState,JUMP_TIMER: RunState}
 }
 
 class Will:
@@ -242,7 +242,7 @@ class Will:
     def add_event(self, event):
         self.event_que.insert(0, event)
 
-    def update(self):
+    def update(self, mx=0, my=0):
         self.cur_state.do(self)
         if len(self.event_que) > 0:
             event = self.event_que.pop()
@@ -255,7 +255,8 @@ class Will:
     def draw(self):
         self.cur_state.draw(self)
         self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
-        debug_print('velocity_x :' + str(self.velocity_x) + '  Dir:' + str(self.dir) + 'State: ' + self.cur_state.__name__)
+        debug_print('velocity_x :' + str(self.velocity_x) + '  Dir:' + str(self.dir) + 'State: ' + self.cur_state.__name__+' frame :'+
+                    str(self.now_max_frame))
         #for ball in self.team:
             #ball.draw()
         #fill here

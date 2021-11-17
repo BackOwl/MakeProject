@@ -79,8 +79,11 @@ def handle_events():
 
 
 def update():
+    global will
+    global monsters
     for game_object in game_world.all_objects():
-        game_object.update()
+        game_object.update(will.x, will.y)
+
 
 
     # fill here for collision check

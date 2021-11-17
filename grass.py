@@ -7,7 +7,7 @@ class Grass:
         self.image0 = load_image('resource/background/background_Level0.png')
         self.image1 = load_image('resource/background/backgroundWalls_Level0.png')
 
-    def update(self):
+    def update(self, mx=0, my=0):
         pass
 
     def monster(self):

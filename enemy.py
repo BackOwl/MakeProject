@@ -19,12 +19,13 @@ FRAMES_PER_ACTION = 8
 class BabySlime:
     image = None
     def __init__(self):
-        self.x, self.y = random.randint(300, 400), random.randint(100, 300)
+        self.x, self.y = random.randint(300, 1000), random.randint(100, 500)
         self.frame = 0
         self.now_max_frame = 5
         self.walk = {}
         self.attackUp, self.attackLeft, self.attackRight, self.attackDown = {}, {}, {}, {}
         self.state = 'walk'
+        self.random= random.randint(0,5)
         if BabySlime.image ==None:
             for i in range(0, 5):
                 self.walk[i] = load_image('resource/enemy/orangeslime/forest_babyslime_walk_%d.png' % (i + 1))
@@ -37,7 +38,8 @@ class BabySlime:
     def update(self, mx= 0, my=0):
         # global now_max_frame
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
-        self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 30, 10)
+        self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 30, 30)
+
         self.attack_state = check_state(mx, my, self.x, self.y, self.state)
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
@@ -60,13 +62,14 @@ class BabySlime:
 class Stone:
     image = None
     def __init__(self):
-        self.x, self.y = random.randint(100, 200), random.randint(100, 300)
+        self.x, self.y = random.randint(300, 1000), random.randint(100, 500)
         self.frame = 0
         self.now_max_frame = 7
         self.walk = {}
         self.attackUp, self.attackLeft, self.attackRight, self.attackDown = {}, {}, {}, {}
         self.walkUp, self.walkLeft, self.walkRight, self.walkDown = {}, {}, {}, {}
         self.state = 'walk'
+        self.random = random.randint(0, 5)
         if Stone.image == None:
             for i in range(0, 7):
                 self.walkUp[i] = load_image('resource/enemy/stone/enemies_golem butler_ floating_ up_0%d.png' % i)
@@ -83,7 +86,8 @@ class Stone:
     def update(self, mx=0, my=0):
         # global now_max_frame
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
-        self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 70, 8)
+        self.x, self.y, self.state = check_attack(mx, my, self.x, self.y, 50, 40)
+
         self.attack_state = check_state(mx, my, self.x, self.y, False)
 
     def get_bb(self):
@@ -136,7 +140,7 @@ def check_attack(Nx, Ny, x, y, want, speed):
         elif A <-1:
             A = -1
         B = (y-A*x)
-        x= x+ (speed/5)*lx * game_framework.frame_time
+        x= x+ (speed* game_framework.frame_time)*lx
         y = A*x +B
 
     else:
