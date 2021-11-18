@@ -185,7 +185,7 @@ class JumpState:
         will.dir = clamp(-1, will.velocity_x, 1)
         will.dir = clamp(-1, will.velocity_y, 1)
         will.frame = 0
-        will.jumptimer =400
+        will.jumptimer =350
 
 
     def exit(will, event):

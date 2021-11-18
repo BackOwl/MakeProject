@@ -55,7 +55,7 @@ class Hanari:
 class Sword:
     image = None
     def __init__(self):
-        self.x, self.y = random.randint(100, 1000), random.randint(100, 400)
+        self.x, self.y = random.randint(300, 900), random.randint(100, 400)
         self.now_max_frame = 3
         self.walk1 = {}
         self.frame=0

@@ -39,7 +39,7 @@ class BabySlime:
     def update(self, will):
         # global now_max_frame
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
-        self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 30+self.random, 30)
+        self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 30+self.random, 10)
         if self.state == False:
             if main_state.collide(will, self) == False:
                 will.attacked()
@@ -90,7 +90,7 @@ class Stone:
     def update(self, will):
         # global now_max_frame
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
-        self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 50+self.random, 40)
+        self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 50+self.random, 20)
 
         self.attack_state = check_state(will.x, will.y,self.x, self.y, False)
         if self.state == False:
