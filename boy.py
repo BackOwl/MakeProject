@@ -20,7 +20,7 @@ FRAMES_PER_ACTION = 8
 
 # Boy Event
 RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP,UP_DOWN, DOWN_DOWN,DOWN_UP,UP_UP,SPACE_DOWN, JUMP_TIMER \
-    ,ATTACK_DOWN,ATTACK_UP,DEAD_HP,CHANGE_SWORD= range(14)
+    ,ATTACK_DOWN,ATTACK_UP,DEAD_HP,CHANGE_SWORD,KEEPRUN= range(15)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
@@ -108,9 +108,19 @@ class RunState:
             will.direction = 2
             will.now_max_frame = 8
             will.velocity_x -= RUN_SPEED_PPS
-        elif event == RIGHT_UP:
+        if event == RIGHT_UP:
             will.now_max_frame = 8#
             will.velocity_x -= RUN_SPEED_PPS
+            if event == LEFT_DOWN:
+                will.add_event(LEFT_DOWN)
+                RunState.enter(will, LEFT_DOWN)
+            elif event == DOWN_DOWN:
+                will.add_event(DOWN_DOWN)
+                RunState.enter(will, DOWN_DOWN)
+            elif event == UP_DOWN:
+                will.add_event(UP_DOWN)
+                RunState.enter(will, UP_DOWN)
+
         elif event == LEFT_UP:
             will.now_max_frame = 8#
             will.velocity_x += RUN_SPEED_PPS
@@ -122,7 +132,7 @@ class RunState:
             will.direction = 1
             will.now_max_frame = 8
             will.velocity_y -= RUN_SPEED_PPS
-        elif event == UP_UP:
+        if event == UP_UP:
             will.now_max_frame = 8#
             will.velocity_y -= RUN_SPEED_PPS
         elif event == DOWN_UP:
@@ -133,8 +143,19 @@ class RunState:
         will.dir = clamp(-1, will.velocity_y, 1)
         will.jumptimer = 800
 
+        # int = 0
+        # if event == DOWN_UP or UP_UP or LEFT_UP or RIGHT_UP:
+        #     if event == DOWN_DOWN or UP_DOWN or LEFT_DOWN or RIGHT_DOWN:
+        #         print("키보드 충돌%d" % int)
+        #         int += 1
+        #         will.add_event(KEEPRUN)
+        #         RunState.exit(will, KEEPRUN)
+
+
     def exit(will, event):
         pass
+
+
         #if event == SPACE:
             #will.depend() // 방패
 
@@ -151,6 +172,8 @@ class RunState:
         if will.attack_score ==1:
             will.attack_image[will.direction].clip_draw(0, 0, 35, 35, will.x, will.y)
             will.attack_score =0
+
+
 class JumpState:
 
     def enter(will, event):
@@ -339,10 +362,10 @@ class ChangeSword:
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,  SPACE_DOWN: IdleState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
-                DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword},
+                DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:RunState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState, SPACE_DOWN: JumpState,
                UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
-               DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword},
+               DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:RunState},
     JumpState: {RIGHT_UP: RunState,LEFT_UP: RunState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,SPACE_DOWN: JumpState,JUMP_TIMER: RunState,
                 ATTACK_DOWN: AttackState, ATTACK_UP: RunState,DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword},
