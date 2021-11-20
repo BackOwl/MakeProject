@@ -111,16 +111,6 @@ class RunState:
         if event == RIGHT_UP:
             will.now_max_frame = 8#
             will.velocity_x -= RUN_SPEED_PPS
-            if event == LEFT_DOWN:
-                will.add_event(LEFT_DOWN)
-                RunState.enter(will, LEFT_DOWN)
-            elif event == DOWN_DOWN:
-                will.add_event(DOWN_DOWN)
-                RunState.enter(will, DOWN_DOWN)
-            elif event == UP_DOWN:
-                will.add_event(UP_DOWN)
-                RunState.enter(will, UP_DOWN)
-
         elif event == LEFT_UP:
             will.now_max_frame = 8#
             will.velocity_x += RUN_SPEED_PPS
@@ -147,7 +137,7 @@ class RunState:
         if event == DOWN_UP or UP_UP or LEFT_UP or RIGHT_UP:
             if event == DOWN_DOWN or UP_DOWN or LEFT_DOWN or RIGHT_DOWN:
                 will.add_event(KEEPRUN)
-                RunState.exit(will, KEEPRUN)
+                RunState.exit(will, RunState)#
             if event == DOWN_DOWN:
                 will.direction = 1
             if event == UP_DOWN:
@@ -172,7 +162,8 @@ class RunState:
         will.x = (1 - 0.5) * will.x + 0.5 * (will.x+will.velocity_x*game_framework.frame_time)
         will.y = (1 - 0.5) * will.y + 0.5 * (will.y+will.velocity_y*game_framework.frame_time)
         #will.x += will.velocity * game_framework.frame_time
-        will.x = clamp(25, will.x, 1600 - 25)
+        will.x = clamp(150, will.x, 1200 - 150)
+        will.y = clamp(100, will.y, 600 - 100)
 
     def draw(will):
         will.image0.clip_draw(int(will.frame) * 35, will.direction * 35, 35, 35, will.x, will.y)
@@ -232,7 +223,8 @@ class JumpState:
         will.jumptimer -= 5
         if will.jumptimer ==0:
             will.add_event(JUMP_TIMER)
-        will.x = clamp(35, will.x, 1200-35)
+        will.x = clamp(150, will.x, 1200 - 150)
+        will.y = clamp(100, will.y, 600 - 100)
 
     def draw(will):
         will.image2.clip_draw(int(will.frame) * 35, will.direction * 35, 35, 35, will.x, will.y)
@@ -242,56 +234,36 @@ class JumpState:
 
 class AttackState:
     def enter(will, event):
-        if event == RIGHT_DOWN:
-            will.now_max_frame = 8
-            will.direction = 3
-        elif event == LEFT_DOWN:
-            will.direction = 2
-            will.now_max_frame = 8
-        elif event == RIGHT_UP:
-            will.now_max_frame = 8#
-        elif event == LEFT_UP:
-            will.now_max_frame = 8#
-        if event == UP_DOWN:
-            will.direction = 0
-            will.now_max_frame = 8
-        elif event == DOWN_DOWN:
-            will.direction = 1
-            will.now_max_frame = 8
-        elif event == UP_UP:
-            will.now_max_frame = 8#
-        elif event == DOWN_UP:
-            will.now_max_frame = 8#
-
         will.jumptimer = 1600
-        will.attack_count+=1
         if will.state == 'short':
             will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
         elif will.state == 'big':
             will.frame = (will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
 
+
+        if event == KEEPRUN:
+            will.cur_state.exit(will, event)
+            will.add_event(ATTACK_DOWN)
     def exit(will, event):
-        if will.state == 'short':
-            if will.frame > (will.attack_count+1)*4 %16:
-                will.add_event(ATTACK_UP)
-            else:
-                will.add_event(ATTACK_DOWN)
-        elif will.state == 'big':
-            if will.frame > (will.attack_count + 1) * 10 %40:
-                will.add_event(ATTACK_UP)
-            else:
-                will.add_event(ATTACK_DOWN)
         #if event == SPACE:
             #will.depend() // 방패
+        pass
 
     def do(will):
-        if will.state =='short':
-            will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
-        elif will.state == 'big':
-            will.frame = (will.frame  + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) %40
             #will.x += will.velocity * game_framework.frame_time
+        if will.state == 'short':
+            will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
+            if will.frame > (will.attack_count + 1) * 4 % 16:
+            else:
+        elif will.state == 'big':
+            will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
+            if will.frame > (will.attack_count + 1) * 10 % 40:
+                will.add_event(ATTACK_UP)
+                AttackState.exit(will, ATTACK_UP)
+            else:
+                will.add_event(ATTACK_DOWN)
+                AttackState.exit(will, ATTACK_DOWN)
 
-        will.x = clamp(35, will.x, 1200 - 35)
         will.jumptimer -=5
         if will.jumptimer ==0:
             will.attack_count =0
@@ -378,13 +350,13 @@ next_state_table = {
                 ATTACK_DOWN: AttackState, ATTACK_UP: RunState,DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:JumpState},
     AttackState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE_DOWN: JumpState,
                 UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
-                  DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword},
+                  DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:RunState},
     DeadState:{RIGHT_UP: DeadState, LEFT_UP: DeadState, RIGHT_DOWN: DeadState, LEFT_DOWN: DeadState, SPACE_DOWN: DeadState,
                 UP_UP: DeadState, DOWN_UP: DeadState, UP_DOWN: DeadState, DOWN_DOWN: DeadState,ATTACK_DOWN: DeadState, ATTACK_UP: DeadState,
-                  DEAD_HP: DeadState,CHANGE_SWORD:DeadState},
+                  DEAD_HP: DeadState,CHANGE_SWORD:DeadState,KEEPRUN:DeadState},
     ChangeSword:{RIGHT_UP: IdleState, LEFT_UP: IdleState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE_DOWN: RunState,
                 UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: IdleState, DOWN_DOWN: RunState,ATTACK_DOWN: RunState, ATTACK_UP: IdleState,
-                  DEAD_HP: DeadState,CHANGE_SWORD:IdleState}
+                  DEAD_HP: DeadState,CHANGE_SWORD:IdleState,KEEPRUN:RunState}
 
 }
 
@@ -401,6 +373,7 @@ class Will:
         self.long_up ={};self.long_down ={};self.long_right ={};self.long_left ={};
         self.long_toxin_up = {};self.long_toxin_down = {};self.long_toxin_right = {};self.long_toxin_left = {};
         self.die= {}
+        self.doing_count={"attack":False,"Roll" :False,"Die" : False,"item":False}
         self.state = 'big'
         self.attack_count =0
         self.HP = 100
@@ -467,13 +440,23 @@ class Will:
 
     def update(self, will):
         self.cur_state.do(self)
-        if len(self.event_que) > 0:
+        if len(self.event_que) > 0 and self.cur_state != DeadState:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
+            self.change_do(event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
         #for ball in self.team:
             #ball.update()
+    def change_do(self,event):
+        if event == ATTACK_DOWN:
+            self.doing_count.update(attack = True)
+            self.attack_count += 1
+        elif event == ATTACK_UP:
+            self.doing_count.update(attack = False)
+
+        if self.doing_count['attack']:
+            self.cur_state = AttackState
 
     def draw(self):
         self.cur_state.draw(self)
