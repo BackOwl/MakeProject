@@ -143,13 +143,20 @@ class RunState:
         will.dir = clamp(-1, will.velocity_y, 1)
         will.jumptimer = 800
 
-        # int = 0
-        # if event == DOWN_UP or UP_UP or LEFT_UP or RIGHT_UP:
-        #     if event == DOWN_DOWN or UP_DOWN or LEFT_DOWN or RIGHT_DOWN:
-        #         print("키보드 충돌%d" % int)
-        #         int += 1
-        #         will.add_event(KEEPRUN)
-        #         RunState.exit(will, KEEPRUN)
+        int = 0
+        if event == DOWN_UP or UP_UP or LEFT_UP or RIGHT_UP:
+            if event == DOWN_DOWN or UP_DOWN or LEFT_DOWN or RIGHT_DOWN:
+                will.add_event(KEEPRUN)
+                RunState.exit(will, KEEPRUN)
+            if event == DOWN_DOWN:
+                will.direction = 1
+            if event == UP_DOWN:
+                will.direction = 0
+            if event == RIGHT_DOWN:
+                will.direction = 3
+            if event == LEFT_DOWN:
+                will.direction = 2
+
 
 
     def exit(will, event):
@@ -368,7 +375,7 @@ next_state_table = {
                DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:RunState},
     JumpState: {RIGHT_UP: RunState,LEFT_UP: RunState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,SPACE_DOWN: JumpState,JUMP_TIMER: RunState,
-                ATTACK_DOWN: AttackState, ATTACK_UP: RunState,DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword},
+                ATTACK_DOWN: AttackState, ATTACK_UP: RunState,DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:JumpState},
     AttackState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE_DOWN: JumpState,
                 UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
                   DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword},
