@@ -87,9 +87,10 @@ class IdleState:
         pass
 
     def do(will):
-        will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % will.now_max_frame
         if will.doing_count["keeprun"]:
             will.doing_count.update(keeprun=False)
+        will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % will.now_max_frame
+
 
     def draw(will):
         will.image1.clip_draw(int(will.frame)* 35, will.direction * 35, 35, 35, will.x, will.y)
@@ -269,17 +270,18 @@ class AttackState:
                 will.doing_count.update(keeprun=False)
             if will.state == 'short':
                 if will.attack_count == 1:
-                    will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
+                    will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION* ACTION_PER_TIME * game_framework.frame_time) % 16
                     if will.frame > 3:
                         will.doing_count.update(attack=False)
                         attack_count = 0
+
                 elif will.attack_count == 2:
-                    will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
+                    will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION* ACTION_PER_TIME * game_framework.frame_time) % 16
                     if will.frame > 7:
                         will.doing_count.update(attack=False)
                         attack_count = 0
                 elif will.attack_count == 3:
-                    will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
+                    will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION* ACTION_PER_TIME * game_framework.frame_time) % 16
                     if will.frame > 11:
                         will.doing_count.update(attack=False)
                         attack_count = 0
@@ -290,7 +292,6 @@ class AttackState:
                         attack_count = 0
 
             elif will.state == 'big':
-                will.frame = ( will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
                 if will.attack_count == 1:
                     will.frame = ( will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
                     if will.frame > 9:
@@ -311,7 +312,7 @@ class AttackState:
                     if will.frame > 39:
                         will.doing_count.update(attack=False)
                         attack_count = 0
-            delay(0.01)
+
             will.jumptimer -=5
             if will.jumptimer ==0:
                 will.attack_count =0
