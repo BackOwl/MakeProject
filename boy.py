@@ -88,7 +88,8 @@ class IdleState:
 
     def do(will):
         will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % will.now_max_frame
-
+        if will.doing_count["keeprun"]:
+            will.doing_count.update(keeprun=False)
 
     def draw(will):
         will.image1.clip_draw(int(will.frame)* 35, will.direction * 35, 35, 35, will.x, will.y)
@@ -288,29 +289,29 @@ class AttackState:
                         will.doing_count.update(attack=False)
                         attack_count = 0
 
-                elif will.state == 'big':
+            elif will.state == 'big':
+                will.frame = ( will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
+                if will.attack_count == 1:
                     will.frame = ( will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
-                    if will.attack_count == 1:
-                        will.frame = ( will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
-                        if will.frame > 9:
-                            will.doing_count.update(attack=False)
-                            attack_count = 0
-                    elif will.attack_count == 2:
-                        will.frame = ( will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
-                        if will.frame > 19:
-                            will.doing_count.update(attack=False)
-                            attack_count = 0
-                    elif will.attack_count == 3:
-                        will.frame = (will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
-                        if will.frame > 29:
-                            will.doing_count.update(attack=False)
-                            attack_count = 0
-                    elif will.attack_count == 4:
-                        will.frame = (will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
-                        if will.frame > 39:
-                            will.doing_count.update(attack=False)
-                            attack_count = 0
-
+                    if will.frame > 9:
+                        will.doing_count.update(attack=False)
+                        attack_count = 0
+                elif will.attack_count == 2:
+                    will.frame = ( will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
+                    if will.frame > 19:
+                        will.doing_count.update(attack=False)
+                        attack_count = 0
+                elif will.attack_count == 3:
+                    will.frame = (will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
+                    if will.frame > 29:
+                        will.doing_count.update(attack=False)
+                        attack_count = 0
+                elif will.attack_count == 4:
+                    will.frame = (will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
+                    if will.frame > 39:
+                        will.doing_count.update(attack=False)
+                        attack_count = 0
+            delay(0.01)
             will.jumptimer -=5
             if will.jumptimer ==0:
                 will.attack_count =0
@@ -376,12 +377,10 @@ class ChangeSword:
     def do(will):
         if will.state == 'big':
             will.state = 'short'
-            will.add_event(CHANGE_SWORD)
             print(will.state)
         elif will.state == 'short':
             will.state = 'big'
             print(will.state)
-            will.add_event(CHANGE_SWORD)
     def draw(will):
         pass
 
@@ -421,7 +420,8 @@ class Will:
         self.long_up ={};self.long_down ={};self.long_right ={};self.long_left ={};
         self.long_toxin_up = {};self.long_toxin_down = {};self.long_toxin_right = {};self.long_toxin_left = {};
         self.die= {}
-        self.doing_count={"attack":False,"Roll" :False,"Die" : False,"item":False,"keeprun":False}
+        self.doing_count={"attack":False,"Roll" :False,"Die" : False,"item":False,"keeprun":False
+                          ,"idle":True}
         self.state = 'big'
         self.attack_count =0
         self.HP = 100
@@ -508,12 +508,14 @@ class Will:
         if self.doing_count['keeprun']:
             if not self.doing_count['attack']:
                 self.cur_state = RunState
+                self.doing_count.update(keeprun=False)
+            else:self.cur_state = AttackState
 
     def draw(self):
         self.cur_state.draw(self)
         self.font.draw(self.x - 60, self.y + 70, '(HP: %3.2f)' % self.HP, (255, 0, 0))
         debug_print('velocity_x :' + str(self.velocity_x) + '  Dir:' + str(self.dir) + 'State: ' + self.cur_state.__name__+' frame :'+
-                    str(self.now_max_frame) + 'combo: ' + str(self.attack_count))
+                    str(self.now_max_frame) + 'combo: ' + str(self.attack_count)+':'+str(self.frame))
         #for ball in self.team:
             #ball.draw()
         #fill here
