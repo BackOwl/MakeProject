@@ -1,7 +1,7 @@
 import game_framework
 from pico2d import *
 from ball import Ball
-
+import server
 import game_world
 
 # Boy Run Speed

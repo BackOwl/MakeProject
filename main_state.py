@@ -5,6 +5,7 @@ import os
 from pico2d import *
 import game_framework
 import game_world
+import server
 
 from boy import Will
 from grass import Grass
@@ -14,10 +15,7 @@ from ball import Ball
 
 name = "MainState"
 
-will = None
-grass = None
-break_objects = []
-monsters = []
+
 
 balls = []
 big_balls = []
@@ -37,21 +35,17 @@ def collide(a, b):
 
 
 def enter():
-    global will
-    will = Will()
-    game_world.add_object(will, 1)
+    server.will = Will()
+    game_world.add_object(server.will, 1)
 
-    global grass
-    grass = Grass()
-    game_world.add_object(grass, 0)
+    server.grass = Grass()
+    game_world.add_object(server.grass, 0)
 
-    global monsters
-    monsters = [BabySlime() for i in range(5)]+[Stone() for i in range(3)]
-    game_world.add_objects(monsters, 1)
+    server.monsters = [BabySlime() for i in range(5)]+[Stone() for i in range(3)]
+    game_world.add_objects(server.monsters, 1)
 
-    global break_objects
-    break_objects = [Hanari() for i in range(5)]+[Sword() for i in range(1)]
-    game_world.add_objects(break_objects, 1)
+    server.break_objects = [Hanari() for i in range(5)]+[Sword() for i in range(1)]
+    game_world.add_objects(server.break_objects, 1)
 
 
 
@@ -82,17 +76,17 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
                 game_framework.quit()
         else:
-            will.handle_event(event)
+            server.will.handle_event(event)
 
 
 def update():
     for game_object in game_world.all_objects():
-        game_object.update(will)
+        game_object.update(server.will)
 
-    for monster in monsters:
-        if collide(will, monster):
+    for monster in server.monsters:
+        if collide(server.will, monster):
             print("COLLISION")
-            monsters.remove(monster)
+            server.monsters.remove(monster)
             game_world.remove_object(monster)
 
 
