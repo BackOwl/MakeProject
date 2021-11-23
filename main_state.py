@@ -8,7 +8,7 @@ import game_world
 import server
 
 from boy import Will
-from grass import Grass
+from grass import Grass,Level2
 from enemy import BabySlime, Stone
 from object import Hanari,Sword
 from ball import Ball
@@ -37,14 +37,16 @@ def collide(a, b):
 def enter():
     server.will = Will()
     game_world.add_object(server.will, 1)
+    if server.grasslevel ==0:
+        server.grass = Grass()
+        game_world.add_object(server.grass, 0)
+    elif server.grasslevel == 1:
+        server.grass = Level2()
+        game_world.add_object(server.grass, 0)
 
-    server.grass = Grass()
-    game_world.add_object(server.grass, 0)
-
-    server.monsters = [BabySlime() for i in range(5)]+[Stone() for i in range(3)]
+    server.monsters = [BabySlime() for i in range(server.slime_count)]+[Stone() for i in range(server.golem_count)]
     game_world.add_objects(server.monsters, 1)
-
-    server.break_objects = [Hanari() for i in range(5)]+[Sword() for i in range(1)]
+    server.break_objects = [Hanari() for i in range(server.Hanari_count)]+[Sword() for i in range(server.sword_count)]
     game_world.add_objects(server.break_objects, 1)
 
 
