@@ -3,6 +3,8 @@ import random
 import game_framework
 import main_state
 from boy import Will
+import server
+import game_world
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
@@ -27,6 +29,9 @@ class BabySlime:
         self.attackUp, self.attackLeft, self.attackRight, self.attackDown = {}, {}, {}, {}
         self.state = 'walk'
         self.random= random.randint(0,5)
+        self.hp = 5
+        self.attack_score = 0
+        self.attack_image =load_image('resource/enemy/orangeslime/forest_babyslime_Damage.png')
         if BabySlime.image ==None:
             for i in range(0, 5):
                 self.walk[i] = load_image('resource/enemy/orangeslime/forest_babyslime_walk_%d.png' % (i + 1))
@@ -47,20 +52,36 @@ class BabySlime:
         self.attack_state = check_state(will.x, will.y, self.x, self.y, self.state)
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
+    def attacked(self):
+        self.attack_image.clip_draw(0, 0, 35, 35, self.x, self.y)
+        self.attack_score =1
+        if self.hp <= 0:
+            server.monsters.remove(self)
+            game_world.remove_object(self)
+            self.hp =0
+        print("slime attacked")
+
     def draw(self):
         if self.state == True:
             self.walk[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
         else:
             if self.attack_state =='Up':
                 self.attackUp[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+                self.direction =0
             elif self.attack_state == 'Down':
                 self.attackDown[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+                self.direction=1
             elif self.attack_state == 'Right':
                 self.attackRight[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+                self.direction=2
             elif self.attack_state == 'Left':
                 self.attackLeft[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
+                self.direction=3
         # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
         draw_rectangle(*self.get_bb())
+        if self.attack_score ==1:
+            self.attack_image.clip_draw(0, 0, 35, 35,self.x, self.y, 20, 20)
+            self.attack_score =0
 
 
 class Stone:
@@ -72,8 +93,16 @@ class Stone:
         self.walk = {}
         self.attackUp, self.attackLeft, self.attackRight, self.attackDown = {}, {}, {}, {}
         self.walkUp, self.walkLeft, self.walkRight, self.walkDown = {}, {}, {}, {}
+        self.attack_image ={}
         self.state = 'walk'
         self.random = random.randint(0, 10)
+        self.hp = 9
+        self.direction =0
+        self.attack_score =0
+        self.attack_image[0] =load_image('resource/enemy/stone/damage/Enemies_Stone Butler_Damaged_Up_White.png')
+        self.attack_image[1] = load_image('resource/enemy/stone/damage/Enemies_Stone Butler_Damaged_Down_White.png')
+        self.attack_image[2] = load_image('resource/enemy/stone/damage/Enemies_Stone Butler_Damaged_Left_White.png')
+        self.attack_image[3] = load_image('resource/enemy/stone/damage/Enemies_Stone Butler_Damaged_Right_White.png')
         if Stone.image == None:
             for i in range(0, 7):
                 self.walkUp[i] = load_image('resource/enemy/stone/enemies_golem butler_ floating_ up_0%d.png' % i)
@@ -100,27 +129,46 @@ class Stone:
     def get_bb(self):
         return self.x - 25, self.y - 25, self.x + 25, self.y + 25
 
+    def attacked(self):
+        self.attack_image[self.direction].clip_draw(0, 0, 35, 35, self.x, self.y)
+        self.attack_score = 1
+        if self.hp <= 0:
+            server.monsters.remove(self)
+            game_world.remove_object(self)
+            self.hp = 0
+        print("slime attacked")
     def draw(self):
         if self.state == True:
             if self.attack_state == 'Up':
                 self.walkUp[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.direction = 0
             elif self.attack_state == 'Down':
                 self.walkDown[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.direction = 1
             elif self.attack_state == 'Right':
                 self.walkRight[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.direction = 3
             elif self.attack_state == 'Left':
                 self.walkLeft[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.direction = 2
         else:
             if self.attack_state == 'Up':
                 self.attackUp[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.direction = 0
             elif self.attack_state == 'Down':
                 self.attackDown[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.direction = 1
             elif self.attack_state == 'Right':
                 self.attackRight[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.direction = 3
             elif self.attack_state == 'Left':
                 self.attackLeft[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
+                self.direction = 2
         # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
         draw_rectangle(*self.get_bb())
+        if self.attack_score ==1:
+            self.attack_image[self.direction].clip_draw(0, 0, 55, 60, self.x, self.y)
+            self.attack_score =0
 
 
 def check_attack(Nx, Ny, x, y, want, speed):

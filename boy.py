@@ -251,9 +251,9 @@ class AttackState:
     def exit(will, event):
         #if event == SPACE:
             #will.depend() // 방패
-        server.grasslevel += 1
-        main_state.exit()
-        game_framework.run(main_state)
+        # server.grasslevel += 1
+        # main_state.exit()
+        # game_framework.run(main_state)
         pass
 
     def do(will):
@@ -316,6 +316,11 @@ class AttackState:
                     if will.frame > 39:
                         will.doing_count.update(attack=False)
                         attack_count = 0
+            for monster in server.monsters:
+                if main_state.attack_collide(monster, will,will.direction):
+                    monster.hp -= 1
+                    monster.attacked()
+                    pass
 
             will.jumptimer -=5
             if will.jumptimer ==0:
@@ -470,8 +475,14 @@ class Will:
         self.team = [Ball() for i in range(5)]
 
     def get_bb(self):
-        # fill here
-        return self.x - 15, self.y - 15, self.x + 15, self.y + 15
+        if self.direction ==0:
+            return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+        elif self.direction ==1:
+            return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+        elif self.direction == 2:
+            return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+        elif self.direction == 3:
+            return self.x - 20, self.y - 20, self.x + 20, self.y + 20
 
     def depend(self):
         pass
@@ -481,7 +492,7 @@ class Will:
     def attacked(self):
         self.attack_image[self.direction].clip_draw(0, 0, 35, 35, self.x, self.y)
         self.attack_score =1
-        self.HP -=1
+        self.HP -=0.1
         if self.HP <= 0:
             self.add_event(DEAD_HP)
             self.HP =0

@@ -31,6 +31,33 @@ def collide(a, b):
     if bottom_a > top_b: return False
     return True
 
+def attack_collide(a,b,dir):# 왼쪽을 맞는 거, 오른쪽을 때리는 거
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if dir ==0:# 위
+        if left_a > right_b: return False
+        if right_a < left_b: return False
+        if top_a < bottom_b: return False
+        if bottom_a > top_b: return False
+    elif dir ==1:# 아래
+        if left_a > right_b: return False
+        if right_a < left_b: return False
+        if top_a < bottom_b: return False
+        if bottom_a > top_b: return False
+    elif dir==2:# 왼
+        if left_a > right_b: return False
+        if right_a < left_b: return False
+        if top_a < bottom_b: return False
+        if bottom_a > top_b: return False
+    elif dir ==3: # 오
+        if left_a > right_b: return False
+        if right_a < left_b: return False
+        if top_a < bottom_b: return False
+        if bottom_a > top_b: return False
+
+    return True
+
 
 
 
@@ -84,8 +111,7 @@ def update():
     for monster in server.monsters:
         if collide(server.will, monster):
             print("COLLISION")
-            server.monsters.remove(monster)
-            game_world.remove_object(monster)
+
 
 
 

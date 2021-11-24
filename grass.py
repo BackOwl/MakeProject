@@ -9,16 +9,20 @@ class Grass:
         self.image0 = load_image('resource/background/background_Level0.png')
         self.image1 = load_image('resource/background/backgroundWalls_Level0.png')
         self.level = 0
+        server.Hanari_count = 5
+        server.slime_count = 2
+        server.golem_count = 3
+        server.sword_count = 1
 
     def update(self, mx=0, my=0):
         pass
 
     def enter(self):
         if self.level ==0:
-            server.Hanari_count =0
-            server.slime_count =0
-            server.golem_count =0
-            server.sword_count =0
+            server.Hanari_count =5
+            server.slime_count =2
+            server.golem_count =3
+            server.sword_count =1
         elif self.level == 1:
             server.Hanari_count = 0
             server.slime_count = 0
