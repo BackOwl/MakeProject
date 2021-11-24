@@ -2,7 +2,7 @@ import game_framework
 from pico2d import *
 from ball import Ball
 import server
-import game_world
+import main_state
 
 # Boy Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -232,6 +232,7 @@ class JumpState:
         will.jumptimer -= 5
         if will.jumptimer ==0:
             will.add_event(JUMP_TIMER)
+
         will.x = clamp(150, will.x, 1200 - 150)
         will.y = clamp(100, will.y, 600 - 100)
 
@@ -250,6 +251,9 @@ class AttackState:
     def exit(will, event):
         #if event == SPACE:
             #will.depend() // 방패
+        server.grasslevel += 1
+        main_state.exit()
+        game_framework.run(main_state)
         pass
 
     def do(will):
