@@ -86,10 +86,17 @@ def exit():
     game_world.clear()
 
 def pause():
-    image = ('resource/framebackground/pause.png')
-    image.clip_draw(0, 0, 800, 600, 600, 300, 1200, 600)
-    pass
+    image = load_image('resource/framebackground/pause.png')
+    image.clip_draw(0, 0, 1024, 1024, 600, 300, 600, 600)
+    update_canvas()
+    wait_for_keydown()
 
+def wait_for_keydown():
+    loop = True
+    while loop:
+        for e in get_events():
+            if e.type == SDL_KEYDOWN and e.key == SDLK_TAB:
+                loop = False
 
 def resume():
     pass
@@ -106,8 +113,7 @@ def handle_events():
             server.will.handle_event(event)
         if event.type == SDL_KEYDOWN and event.key == SDLK_TAB:
             pause()
-        elif event.type == SDL_KEYUP and event.key == SDLK_TAB:
-            server.will.handle_event(event)
+
 
 
 def update():
