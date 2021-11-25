@@ -476,13 +476,13 @@ class Will:
 
     def get_bb(self):
         if self.direction ==0:
-            return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+            return self.x - 20, self.y - 20, self.x + 20, self.y + 30
         elif self.direction ==1:
-            return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+            return self.x - 20, self.y - 30, self.x + 20, self.y + 20
         elif self.direction == 2:
-            return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+            return self.x - 30, self.y - 20, self.x + 20, self.y + 20
         elif self.direction == 3:
-            return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+            return self.x - 20, self.y - 20, self.x + 30, self.y + 20
 
     def depend(self):
         pass
