@@ -14,7 +14,7 @@ from object import Hanari,Sword
 from ball import Ball
 
 name = "MainState"
-
+image = None
 
 
 balls = []
@@ -86,6 +86,8 @@ def exit():
     game_world.clear()
 
 def pause():
+    image = ('resource/framebackground/pause.png')
+    image.clip_draw(0, 0, 800, 600, 600, 300, 1200, 600)
     pass
 
 
@@ -101,6 +103,10 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
                 game_framework.quit()
         else:
+            server.will.handle_event(event)
+        if event.type == SDL_KEYDOWN and event.key == SDLK_TAB:
+            pause()
+        elif event.type == SDL_KEYUP and event.key == SDLK_TAB:
             server.will.handle_event(event)
 
 

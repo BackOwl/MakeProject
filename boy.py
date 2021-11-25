@@ -252,8 +252,10 @@ class AttackState:
         #if event == SPACE:
             #will.depend() // 방패
         # server.grasslevel += 1
+        # server.grass.enter()
         # main_state.exit()
         # game_framework.run(main_state)
+
         pass
 
     def do(will):
