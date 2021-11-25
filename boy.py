@@ -248,6 +248,7 @@ class AttackState:
         #if will.state == 'short':self.fullframe = 16
         #elif will.state == 'big':self.fullframe =40
 
+
     def exit(will, event):
         #if event == SPACE:
             #will.depend() // 방패
@@ -255,7 +256,7 @@ class AttackState:
         # server.grass.enter()
         # main_state.exit()
         # game_framework.run(main_state)
-
+        will.sound_attack.play()
         pass
 
     def do(will):
@@ -474,7 +475,9 @@ class Will:
         self.cur_state.enter(self, None)
         self.attack_score = 0
 
-        self.team = [Ball() for i in range(5)]
+        self.sound_walk = load_wav('resource/sound/Will_Walk.wav')
+        self.sound_attack = load_wav('resource/sound/Will_Sword.wav')
+        self.sound_roll = load_wav('resource/sound/Will_Roll.wav')
 
     def get_bb(self):
         if self.direction ==0:
