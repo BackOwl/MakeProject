@@ -93,6 +93,8 @@ def pause():
 
 def wait_for_keydown():
     loop = True
+    sound = load_wav('resource/sound/pause.wav')
+    sound.play()
     while loop:
         for e in get_events():
             if e.type == SDL_KEYDOWN and e.key == SDLK_TAB:
