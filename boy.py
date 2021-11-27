@@ -141,18 +141,23 @@ class RunState:
                 # will.add_event(KEEPRUN)
                 # RunState.exit(will, RunState)#
                 will.doing_count.update(keeprun=True)
-            if event == DOWN_DOWN:
-                will.direction = 1
-            if event == UP_DOWN:
-                will.direction = 0
-            if event == RIGHT_DOWN:
-                will.direction = 3
-            if event == LEFT_DOWN:
-                will.direction = 2
+                if event == DOWN_DOWN:
+                    will.direction = 1
+                if event == UP_DOWN:
+                    will.direction = 0
+                if event == RIGHT_DOWN:
+                    will.direction = 3
+                if event == LEFT_DOWN:
+                    will.direction = 2
+            else: will.doing_count.update(keeprun=False)
 
-        if will.doing_count["keeprun"]:
-            will.add_event(KEEPRUN)
-            RunState.exit(will, RunState)#
+
+        # if will.doing_count["keeprun"]:
+        #     will.doing_count.update(keeprun=False)
+        #     will.add_event(KEEPRUN)
+        # elif not will.doing_count["keeprun"]:
+        #     will.add_event(UP_UP)
+
 
 
 
@@ -529,6 +534,7 @@ class Will:
         if self.doing_count['keeprun']:
             if not self.doing_count['attack']:
                 self.cur_state = RunState
+                self.add_event(KEEPRUN)
                 self.doing_count.update(keeprun=False)
             else:self.cur_state = AttackState
 
