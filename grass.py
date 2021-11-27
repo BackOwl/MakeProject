@@ -14,6 +14,7 @@ class Grass:
         server.golem_count = 3
         server.sword_count = 1
 
+
     def update(self, mx=0, my=0):
         pass
 
@@ -31,9 +32,12 @@ class Grass:
 
 
     def draw(self):
-        self.image0.clip_draw(0, 0, 580, 360, 600, 300, 1200, 600)
-        # self.image1.draw(600, 340)
-        self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+        if self.level == 0:
+            self.image0.clip_draw(0, 0, 580, 360, 600, 300, 1200, 600)
+            self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+        elif self.level == 1:
+            self.image0.clip_draw(0, 0, 580, 360, 600, 300, 1200, 600)
+            self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
 
     # fill here
     def get_bb(self):
@@ -49,9 +53,12 @@ class Level2:
         pass
 
     def draw(self):
-        self.image0.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
-        # self.image1.draw(600, 340)
-        self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+        if self.level == 0:
+            self.image0.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+            self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+        elif self.level == 1:
+            self.image0.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+            self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
 
     # fill here
     def enter(self):
@@ -67,6 +74,7 @@ class Level2:
             server.sword_count = 0
     def get_bb(self):
         return 0, 0, 0, 0
+
 class Level3:
     def __init__(self):
         self.image0 = load_image('resource/background/background_Level_0_Walls.png')
@@ -77,9 +85,12 @@ class Level3:
         pass
 
     def draw(self):
-        # self.image1.draw(600, 340)
-        self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
-        self.image0.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+        if self.level == 0:
+            self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+            self.image0.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+        elif self.level == 1:
+            self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+            self.image0.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
 
     # fill here
     def enter(self):
