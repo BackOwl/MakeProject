@@ -76,8 +76,8 @@ def enter():
     server.break_objects = [Hanari() for i in range(server.Hanari_count)]+[Sword() for i in range(server.sword_count)]
     game_world.add_objects(server.break_objects, 1)
 
-    test_door = Door('left')
-    game_world.add_object(test_door, 1)
+    server.door = Door('left')
+    game_world.add_object(server.door , 1)
 
 
 

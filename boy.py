@@ -20,7 +20,7 @@ FRAMES_PER_ACTION = 8
 
 # Boy Event
 RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP,UP_DOWN, DOWN_DOWN,DOWN_UP,UP_UP,SPACE_DOWN, JUMP_TIMER \
-    ,ATTACK_DOWN,ATTACK_UP,DEAD_HP,CHANGE_SWORD,KEEPRUN= range(15)
+    ,ATTACK_DOWN,ATTACK_UP,DEAD_HP,CHANGE_SWORD,KEEPRUN,KEY_F= range(16)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
@@ -30,11 +30,13 @@ key_event_table = {
     (SDL_KEYDOWN, SDLK_SPACE): SPACE_DOWN,
     (SDL_KEYDOWN, SDLK_q):ATTACK_DOWN,
     (SDL_KEYDOWN, SDLK_r):CHANGE_SWORD,
+    (SDL_KEYDOWN, SDLK_f):KEY_F,
 
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
     (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
     (SDL_KEYUP, SDLK_UP): UP_UP,
     (SDL_KEYUP, SDLK_DOWN): DOWN_UP,
+
     #(SDL_KEYUP, SDLK_SPACE): SPACE_UP
     # 공격키 q
     (SDL_KEYUP, SDLK_q):ATTACK_UP
@@ -406,22 +408,22 @@ class ChangeSword:
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,  SPACE_DOWN: IdleState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
-                DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:RunState},
+                DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:RunState,KEY_F:RunState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState, SPACE_DOWN: JumpState,
                UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
-               DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:RunState},
+               DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:RunState,KEY_F:IdleState},
     JumpState: {RIGHT_UP: RunState,LEFT_UP: RunState, LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                 UP_UP: RunState, DOWN_UP: RunState, UP_DOWN: RunState, DOWN_DOWN: RunState,SPACE_DOWN: JumpState,JUMP_TIMER: RunState,
-                ATTACK_DOWN: AttackState, ATTACK_UP: RunState,DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:JumpState},
+                ATTACK_DOWN: AttackState, ATTACK_UP: RunState,DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:JumpState,KEY_F:RunState},
     AttackState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE_DOWN: JumpState,
                 UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: AttackState, ATTACK_UP: RunState,
-                  DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:AttackState},
+                  DEAD_HP: DeadState,CHANGE_SWORD:ChangeSword,KEEPRUN:AttackState,KEY_F:RunState},
     DeadState:{RIGHT_UP: DeadState, LEFT_UP: DeadState, RIGHT_DOWN: DeadState, LEFT_DOWN: DeadState, SPACE_DOWN: DeadState,
                 UP_UP: DeadState, DOWN_UP: DeadState, UP_DOWN: DeadState, DOWN_DOWN: DeadState,ATTACK_DOWN: DeadState, ATTACK_UP: DeadState,
-                  DEAD_HP: DeadState,CHANGE_SWORD:DeadState,KEEPRUN:DeadState},
+                  DEAD_HP: DeadState,CHANGE_SWORD:DeadState,KEEPRUN:DeadState,KEY_F:DeadState},
     ChangeSword:{RIGHT_UP: IdleState, LEFT_UP: IdleState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SPACE_DOWN: RunState,
-                UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: IdleState, DOWN_DOWN: RunState,ATTACK_DOWN: RunState, ATTACK_UP: IdleState,
-                  DEAD_HP: DeadState,CHANGE_SWORD:IdleState,KEEPRUN:RunState}
+                UP_UP: IdleState, DOWN_UP: IdleState, UP_DOWN: RunState, DOWN_DOWN: RunState,ATTACK_DOWN: RunState, ATTACK_UP: IdleState,
+                  DEAD_HP: DeadState,CHANGE_SWORD:IdleState,KEEPRUN:RunState,KEY_F:IdleState}
 
 }
 
@@ -439,7 +441,7 @@ class Will:
         self.long_toxin_up = {};self.long_toxin_down = {};self.long_toxin_right = {};self.long_toxin_left = {};
         self.die= {}
         self.doing_count={"attack":False,"Roll" :False,"Die" : False,"item":False,"keeprun":False
-                          ,"idle":True}
+                          ,"idle":True,"key_f":False}
         self.state = 'big'
         self.attack_count =0
         self.HP = 100
@@ -528,6 +530,10 @@ class Will:
             self.attack_count += 1
         elif event == ATTACK_UP:
             self.doing_count.update(attack = False)
+        if event == KEY_F:
+            self.doing_count.update(key_f=True)
+            server.grass.update
+        else:self.doing_count.update(key_f=False)
 
         if self.doing_count['attack']:
             self.cur_state = AttackState

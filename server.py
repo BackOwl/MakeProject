@@ -3,6 +3,7 @@ background = {}
 grass = None
 monsters = []
 break_objects = []
+doors =[]
 grasslevel =0
 slime_count =0
 golem_count =0

@@ -109,7 +109,7 @@ class Door:
 
     def update(self, will):
         # global now_max_frame
-        if main_state.collide(will,self)==True:
+        if main_state.collide(will,self)==True and will.doing_count['key_f']:
             self.state = 'break'
         if self.state == 'break':
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
