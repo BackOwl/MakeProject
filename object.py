@@ -90,13 +90,13 @@ class Door:
     image = None
     def __init__(self,state):
         if state == 'up':
-            self.x, self.y = 300,1100
+            self.x, self.y = 600,550
         elif state == 'down':
-            self.x, self.y = 300, 100
+            self.x, self.y = 600, 50
         elif state == 'left':
-            self.x, self.y = 50, 600
+            self.x, self.y = 100, 300
         elif state =='right':
-            self.x, self.y = 550, 600
+            self.x, self.y = 1100, 300
         self.now_max_frame = 11
         self.frame=0
         self.now_radian =0
@@ -114,10 +114,10 @@ class Door:
                 self.frame = 11
 
     def get_bb(self):
-        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
+        return self.x - 75, self.y - 75, self.x + 75, self.y + 75
     def draw(self):
         #self.walk1.draw(100,190)
-        self.walk1.clip_draw(0, 0, 130*self.now_frame, 130, self.x, self.y)
+        self.walk1.clip_draw(130*self.frame, 0, 130, 130, self.x, self.y)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
         draw_rectangle(*self.get_bb())
 

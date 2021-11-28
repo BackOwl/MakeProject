@@ -10,7 +10,7 @@ import server
 from boy import Will
 from grass import Grass,Level2,Level3
 from enemy import BabySlime, Stone
-from object import Hanari,Sword
+from object import Hanari,Sword,Door
 from ball import Ball
 
 name = "MainState"
@@ -75,6 +75,9 @@ def enter():
     game_world.add_objects(server.monsters, 1)
     server.break_objects = [Hanari() for i in range(server.Hanari_count)]+[Sword() for i in range(server.sword_count)]
     game_world.add_objects(server.break_objects, 1)
+
+    test_door = Door('down')
+    game_world.add_object(test_door, 1)
 
 
 
