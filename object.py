@@ -91,15 +91,18 @@ class Door:
     def __init__(self,state):
         if state == 'up':
             self.x, self.y = 600,550
+            self.now_radian = 0.0
         elif state == 'down':
             self.x, self.y = 600, 50
+            self.now_radian = 3.14
         elif state == 'left':
             self.x, self.y = 100, 300
+            self.now_radian = 1.57
         elif state =='right':
             self.x, self.y = 1100, 300
+            self.now_radian = 4.71
         self.now_max_frame = 11
         self.frame=0
-        self.now_radian =0
         self.state = 'walk'
         if Door.image ==None:
             self.walk1 = load_image('resource/background/door.png')
@@ -117,8 +120,11 @@ class Door:
         return self.x - 75, self.y - 75, self.x + 75, self.y + 75
     def draw(self):
         #self.walk1.draw(100,190)
-        self.walk1.clip_draw(130*self.frame, 0, 130, 130, self.x, self.y)
+        if self.now_radian >0:
+            self.walk1.clip_composite_draw(130*self.frame, 0, 130, 130, self.now_radian,'',self.x, self.y,130,130)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
+        else:
+            self.walk1.clip_draw(130 * self.frame, 0, 130, 130, self.x, self.y)
         draw_rectangle(*self.get_bb())
 
 
