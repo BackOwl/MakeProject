@@ -6,23 +6,16 @@ import server
 
 class Grass:
     def __init__(self):
-        self.image0 = load_image('resource/background/background_Level01.png')
+        self.image0 = load_image('resource/background/background_Level003.png')
         self.image1 = load_image('resource/background/backgroundWalls_Level0.png')
         self.level = 0
         server.Hanari_count = 5
         server.slime_count = 0
         server.golem_count = 0
         server.sword_count = 1
-        self.image_level1_0 = load_image('resource/background/Dungeon1_Level0_LowerDetail_6.png')
-        self.image_level1_1 = load_image('resource/background/Dungeon1_Level2_LowerDetail_5.png')
-        self.image_level1_2 = load_image('resource/background/Dungeon1_Level2_LowerDetail_4.png')
-
         self.image_level2_0 = load_image('resource/background/Dungeon1_Level0_LowerDetail_7.png')
-        self.image_level2_1 = load_image('resource/background/Dungeon1_Level2_LowerDetail_1.png')
-        self.image_level2_2 = load_image('resource/background/Dungeon1_Level2_LowerDetail_2.png')
-        self.image_level2_3 = load_image('resource/background/Dungeon1_LowerDetail_6.png')
-        self.tile1 = load_image('resource/background/Tile_1.png')
-        self.tile2 = load_image('resource/background/Tile_2.png')
+        self.tile1 = load_image('resource/background/background_Level05.png')
+        self.tile2 = load_image('resource/background/background_Level00.png')
 
     def update(self, mx=0, my=0):
         pass
@@ -42,32 +35,15 @@ class Grass:
 
     def draw(self):
         if self.level == 0:
-            self.image0.clip_draw(0, 0, 509, 294, 600, 300, 1200, 600)
-            self.image_level2_0.clip_draw(0, 0, 176, 159, 600, 300, 1200, 600)
+            self.image0.clip_draw(0, 0, 509, 294, 600, 300, 1018, 488)
             self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
-            self.image_level1_0.clip_draw(0, 0, 80, 53, 800, 300)
-            self.image_level1_0.clip_draw(0, 0, 80, 53, 600, 400)
-            self.image_level1_0.clip_draw(0, 0, 80, 53, 680, 453)
-            self.image_level1_0.clip_draw(0, 0, 80, 53, 300, 200)
-            self.image_level1_2.clip_draw(0, 0, 80, 53, 300, 200)
-            self.image_level1_2.clip_draw(0, 0, 80, 53, 520, 350)
-            self.image_level1_1.clip_draw(0, 0, 54, 75, 600, 400)
-            self.tile1.clip_draw(0, 0, 222, 67, 600, 400)
+
 
         elif self.level == 1:
-            self.image0.clip_draw(0, 0, 509, 294, 600, 300, 1200, 600)
-            self.image_level2_0.clip_draw(0, 0, 176, 159, 600, 300, 1200, 600)
+            self.tile2.clip_draw(0, 0, 509, 294, 600, 300, 1100, 600)
+            self.tile1.clip_draw(0, 0, 509, 294, 600, 300, 1100, 600)
             self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
 
-            self.image_level2_0.clip_draw(0, 0, 80, 53, 800, 300)
-            self.image_level2_0.clip_draw(0, 0, 80, 53, 600, 400)
-            self.image_level2_0.clip_draw(0, 0, 80, 53, 680, 453)
-            self.image_level2_0.clip_draw(0, 0, 80, 53, 300, 200)
-            self.image_level2_2.clip_draw(0, 0, 80, 53, 300, 200)
-            self.image_level2_2.clip_draw(0, 0, 80, 53, 520, 350)
-            self.image_level2_1.clip_draw(0, 0, 54, 75, 600, 400)
-            self.image_level2_3.clip_draw(0, 0, 125, 52, 700, 300)
-            self.image_level2_3.clip_draw(0, 0, 125, 52, 300, 400)
 
     # fill here
     def get_bb(self):
