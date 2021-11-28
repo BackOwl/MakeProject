@@ -72,9 +72,9 @@ class Sword:
         if main_state.collide(will,self)==True:
             self.state = 'break'
             if self.state == 'break':
+                self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
                 if self.frame ==2:
                     self.frame =2
-                self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
 
     def get_bb(self):
         return self.x - 10, self.y - 20, self.x + 10, self.y + 20
@@ -86,4 +86,39 @@ class Sword:
             self.broken[int(self.frame)].clip_draw(0, 0, 17, 29, self.x, self.y)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
             draw_rectangle(*self.get_bb())
+class Door:
+    image = None
+    def __init__(self,state):
+        if state == 'up':
+            self.x, self.y = 300,1100
+        elif state == 'down':
+            self.x, self.y = 300, 100
+        elif state == 'left':
+            self.x, self.y = 50, 600
+        elif state =='right':
+            self.x, self.y = 550, 600
+        self.now_max_frame = 11
+        self.frame=0
+        self.now_radian =0
+        self.state = 'walk'
+        if Door.image ==None:
+            self.walk1 = load_image('resource/background/door.png')
+
+    def update(self, will):
+        # global now_max_frame
+        if main_state.collide(will,self)==True:
+            self.state = 'break'
+        if self.state == 'break':
+            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
+            if self.frame >= 11:
+                self.frame = 11
+
+    def get_bb(self):
+        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
+    def draw(self):
+        #self.walk1.draw(100,190)
+        self.walk1.clip_draw(0, 0, 130*self.now_frame, 130, self.x, self.y)
+            # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
+        draw_rectangle(*self.get_bb())
+
 
