@@ -21,12 +21,12 @@ class Grass:
         pass
 
     def enter(self):
-        if self.level ==0:
+        if server.grass_level ==0:
             server.Hanari_count =5
             server.slime_count =2
             server.golem_count =3
             server.sword_count =1
-        elif self.level == 1:
+        elif server.grass_level == 1:
             server.Hanari_count = 0
             server.slime_count = 0
             server.golem_count = 0

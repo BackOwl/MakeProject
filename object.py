@@ -3,6 +3,7 @@ import random
 import main_state
 import game_framework
 from boy import Will
+import server
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
@@ -111,14 +112,22 @@ class Door:
         # global now_max_frame
         if main_state.collide(will,self)==True and will.doing_count['key_f']:
             self.state = 'break'
-            print('door')
         if self.state == 'break':
             self.frame = ((self.frame +1) % self.now_max_frame)
             delay(0.05)
-            print(self.frame)
             if self.frame >= 10:
                 self.frame = 10
                 self.state = 'walk'
+                if server.grass_level == 0:
+                    server.grass_level = 1
+                elif server.grass_level == 1:
+                    server.grasslevel += 1
+                    server.grass_level = 0
+                print(server.grass_level)
+                server.grass.enter()
+
+                main_state.exit()
+                game_framework.run(main_state)
 
     def get_bb(self):
         return self.x - 75, self.y - 75, self.x + 75, self.y + 75
