@@ -111,20 +111,24 @@ class Door:
         # global now_max_frame
         if main_state.collide(will,self)==True and will.doing_count['key_f']:
             self.state = 'break'
+            print('door')
         if self.state == 'break':
-            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
-            if self.frame >= 11:
-                self.frame = 11
+            self.frame = ((self.frame +1) % self.now_max_frame)
+            delay(0.05)
+            print(self.frame)
+            if self.frame >= 10:
+                self.frame = 10
+                self.state = 'walk'
 
     def get_bb(self):
         return self.x - 75, self.y - 75, self.x + 75, self.y + 75
     def draw(self):
         #self.walk1.draw(100,190)
         if self.now_radian >0:
-            self.walk1.clip_composite_draw(130*self.frame, 0, 130, 130, self.now_radian,'',self.x, self.y,130,130)
+            self.walk1.clip_composite_draw(130*self.frame, 0, 130, 130, self.now_radian,'',self.x, self.y,195,195)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
         else:
-            self.walk1.clip_draw(130 * self.frame, 0, 130, 130, self.x, self.y)
+            self.walk1.clip_draw(130 * self.frame, 0, 130, 130, self.x, self.y,195,195)
         draw_rectangle(*self.get_bb())
 
 
