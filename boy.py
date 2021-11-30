@@ -161,14 +161,8 @@ class RunState:
         #     will.add_event(UP_UP)
 
 
-
-
-
-
     def exit(will, event):
         pass
-
-
         #if event == SPACE:
             #will.depend() // 방패
 
@@ -178,8 +172,8 @@ class RunState:
         will.x = (1 - 0.5) * will.x + 0.5 * (will.x+will.velocity_x*game_framework.frame_time)
         will.y = (1 - 0.5) * will.y + 0.5 * (will.y+will.velocity_y*game_framework.frame_time)
         #will.x += will.velocity * game_framework.frame_time
-        will.x = clamp(150, will.x, 1200 - 150)
-        will.y = clamp(100, will.y, 600 - 100)
+        will.x = clamp(server.clampx, will.x, 1200 - server.clampx)
+        will.y = clamp(server.clampy, will.y, 600 - server.clampy)
 
     def draw(will):
         will.image0.clip_draw(int(will.frame) * 35, will.direction * 35, 35, 35, will.x, will.y)
@@ -240,8 +234,8 @@ class JumpState:
         if will.jumptimer ==0:
             will.add_event(JUMP_TIMER)
 
-        will.x = clamp(150, will.x, 1200 - 150)
-        will.y = clamp(100, will.y, 600 - 100)
+        will.x = clamp(server.clampx, will.x, 1200 - server.clampx)
+        will.y = clamp(server.clampy, will.y, 600 - server.clampy)
 
     def draw(will):
         will.image2.clip_draw(int(will.frame) * 35, will.direction * 35, 35, 35, will.x, will.y)

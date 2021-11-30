@@ -89,7 +89,7 @@ class Sword:
             draw_rectangle(*self.get_bb())
 class Door:
     image = None
-    def __init__(self,state):
+    def __init__(self,state,next):
         if state == 'up':
             self.x, self.y = 600,550
             self.now_radian = 0.0
@@ -105,6 +105,7 @@ class Door:
         self.now_max_frame = 11
         self.frame=0
         self.state = 'walk'
+        self.next = next
         if Door.image ==None:
             self.walk1 = load_image('resource/background/door.png')
 
@@ -118,11 +119,18 @@ class Door:
             if self.frame >= 10:
                 self.frame = 10
                 self.state = 'walk'
-                if server.grass_level == 0:
-                    server.grass_level = 1
-                elif server.grass_level == 1:
-                    server.grasslevel += 1
-                    server.grass_level = 0
+                if self.next =='next':
+                    if server.grass_level == 0:
+                        server.grass_level = 1
+                    elif server.grass_level == 1:
+                        server.grasslevel += 1
+                        server.grass_level = 0
+                elif self.next == 'back':
+                    if server.grass_level == 0:
+                        server.grass_level = 1
+                        server.grasslevel -= 1
+                    elif server.grass_level == 1:
+                        server.grass_level = 0
                 print(server.grass_level)
                 server.grass.enter()
 

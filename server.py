@@ -10,3 +10,5 @@ slime_count =0
 golem_count =0
 Hanari_count=0
 sword_count =0
+clampx =150
+clampy =100
