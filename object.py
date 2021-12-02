@@ -106,6 +106,7 @@ class Door:
         self.frame=0
         self.state = 'walk'
         self.next = next
+        self.switch =state
         if Door.image ==None:
             self.walk1 = load_image('resource/background/door.png')
 
@@ -125,12 +126,24 @@ class Door:
                     elif server.grass_level == 1:
                         server.grasslevel += 1
                         server.grass_level = 0
+                    if self.switch =='right':
+                        server.willx = 200
+                        server.willy =300
+                    elif self.switch =='down':
+                        server.willy = 400
+                        server.willx = 600
                 elif self.next == 'back':
                     if server.grass_level == 0:
                         server.grass_level = 1
                         server.grasslevel -= 1
                     elif server.grass_level == 1:
                         server.grass_level = 0
+                    if self.switch == 'left':
+                        server.willx = 1000
+                        server.willy = 300
+                    elif self.switch == 'up':
+                        server.willx = 600
+                        server.willy = 100
                 print(server.grass_level)
                 server.grass.enter()
 

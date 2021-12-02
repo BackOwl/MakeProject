@@ -25,12 +25,15 @@ class Grass:
             server.slime_count =2
             server.golem_count =3
             server.sword_count =1
+            server.clampy = 100
+            server.door_state = {"up": False, "down": False, "right": True, "left": False}
         elif server.grass_level == 1:
             server.Hanari_count = 0
             server.slime_count = 0
             server.golem_count = 0
             server.sword_count = 0
             server.clampy = 250
+            server.door_state = {"up": False, "down": False, "right": True, "left": True}
 
 
     def draw(self):

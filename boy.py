@@ -424,7 +424,7 @@ next_state_table = {
 class Will:
 
     def __init__(self):
-        self.x, self.y = 200, 300
+        self.x, self.y = server.willx, server.willy
         # will is only once created, so instance image loading is fine
         self.image0 = load_image('resource/Will/will animation cycle35.35.png')
         self.image1 = load_image('resource/Will/Will_Idle35.35.png')
