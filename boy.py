@@ -261,19 +261,6 @@ class AttackState:
         pass
 
     def do(will):
-            #will.x += will.velocity * game_framework.frame_time
-        # if will.state == 'short':
-        #     will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
-        #     if will.frame > (will.attack_count + 1) * 4 % 16:
-        #     else:
-        # elif will.state == 'big':
-        #     will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
-        #     if will.frame > (will.attack_count + 1) * 10 % 40:
-        #         will.add_event(ATTACK_UP)
-        #         AttackState.exit(will, ATTACK_UP)
-        #     else:
-        #         will.add_event(ATTACK_DOWN)
-        #         AttackState.exit(will, ATTACK_DOWN)
             if will.doing_count["keeprun"]:
                 will.doing_count.update(keeprun=False)
             if will.state == 'short':
@@ -332,6 +319,7 @@ class AttackState:
             will.attack_count %=4
 
     def draw(will):
+        delay(0.05)
         if will.state =='short':#4
             if will.direction ==1:
                 will.short_down[int(will.frame)].clip_draw(0, 0, 35, 35, will.x, will.y)
@@ -362,7 +350,7 @@ class AttackState:
         if will.attack_score ==1:
             will.attack_image[will.direction].clip_draw(0, 0, 35, 35, will.x, will.y)
             will.attack_score =0
-        delay(0.1)
+
 
 class DeadState:
     def enter(will, event):
@@ -534,7 +522,7 @@ class Will:
         if self.doing_count['keeprun']:
             if not self.doing_count['attack']:
                 self.cur_state = RunState
-                self.add_event(KEEPRUN)
+                #self.add_event(KEEPRUN)
                 self.doing_count.update(keeprun=False)
             else:self.cur_state = AttackState
 
