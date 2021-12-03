@@ -246,10 +246,10 @@ class JumpState:
 class AttackState:
     def enter(will, event):
         will.jumptimer = 1600
-        #if will.state == 'short':self.fullframe = 16
-        #elif will.state == 'big':self.fullframe =40
-
-
+        if will.state == 'short':
+            will.frame = will.attack_count * 4
+        elif will.state == 'big':
+            will.frame = will.attack_count * 10
     def exit(will, event):
         #if event == SPACE:
             #will.depend() // 방패
@@ -265,45 +265,44 @@ class AttackState:
                 will.doing_count.update(keeprun=False)
             if will.state == 'short':
                 if will.attack_count == 1:
-                    will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION* ACTION_PER_TIME * game_framework.frame_time) % 16
+                    will.frame = (will.frame + FRAMES_PER_ACTION* ACTION_PER_TIME * game_framework.frame_time) % 16
                     if will.frame > 3:
                         will.doing_count.update(attack=False)
                         attack_count = 0
-
                 elif will.attack_count == 2:
-                    will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION* ACTION_PER_TIME * game_framework.frame_time) % 16
+                    will.frame = (will.frame + FRAMES_PER_ACTION* ACTION_PER_TIME * game_framework.frame_time) % 16
                     if will.frame > 7:
                         will.doing_count.update(attack=False)
                         attack_count = 0
                 elif will.attack_count == 3:
-                    will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION* ACTION_PER_TIME * game_framework.frame_time) % 16
+                    will.frame = (will.frame + FRAMES_PER_ACTION* ACTION_PER_TIME * game_framework.frame_time) % 16
                     if will.frame > 11:
                         will.doing_count.update(attack=False)
                         attack_count = 0
                 elif will.attack_count == 4:
-                    will.frame = (will.attack_count * 4 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
+                    will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
                     if will.frame > 15:
                         will.doing_count.update(attack=False)
                         attack_count = 0
 
             elif will.state == 'big':
                 if will.attack_count == 1:
-                    will.frame = ( will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
+                    will.frame = (  will.frame+ FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
                     if will.frame > 9:
                         will.doing_count.update(attack=False)
                         attack_count = 0
                 elif will.attack_count == 2:
-                    will.frame = ( will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
+                    will.frame = (  will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
                     if will.frame > 19:
                         will.doing_count.update(attack=False)
                         attack_count = 0
                 elif will.attack_count == 3:
-                    will.frame = (will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
+                    will.frame = ( will.frame+ FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
                     if will.frame > 29:
                         will.doing_count.update(attack=False)
                         attack_count = 0
                 elif will.attack_count == 4:
-                    will.frame = (will.attack_count * 10 + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
+                    will.frame = ( will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
                     if will.frame > 39:
                         will.doing_count.update(attack=False)
                         attack_count = 0
@@ -319,7 +318,6 @@ class AttackState:
             will.attack_count %=4
 
     def draw(will):
-        delay(0.05)
         if will.state =='short':#4
             if will.direction ==1:
                 will.short_down[int(will.frame)].clip_draw(0, 0, 35, 35, will.x, will.y)
@@ -380,9 +378,11 @@ class ChangeSword:
         if will.state == 'big':
             will.state = 'short'
             print(will.state)
+            will.add_event(KEY_F)
         elif will.state == 'short':
             will.state = 'big'
             print(will.state)
+            will.add_event(KEY_F)
     def draw(will):
         pass
 
@@ -424,7 +424,7 @@ class Will:
         self.die= {}
         self.doing_count={"attack":False,"Roll" :False,"Die" : False,"item":False,"keeprun":False
                           ,"idle":True,"key_f":False}
-        self.state = 'big'
+        self.state = 'short'
         self.attack_count =0
         self.HP = 100
         for i in range(0, 40):
