@@ -357,9 +357,8 @@ class AttackState:
 
 class DeadState:
     def enter(will, event):
-
+        will.jumptimer = 1000
         pass
-
     def exit(will, event):
         pass
 
@@ -367,6 +366,12 @@ class DeadState:
         will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time)
         if will.frame >=10:
             will.frame =10
+            delay(3)
+            will.add_event(KEY_F)
+            server.grass.enter()
+            main_state.exit()
+            game_framework.run(main_state)
+
 
 
     def draw(will):

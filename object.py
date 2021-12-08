@@ -4,6 +4,7 @@ import main_state
 import game_framework
 from boy import Will
 import server
+import title_state
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
@@ -45,11 +46,11 @@ class Hanari:
         #self.walk1.draw(100,190)
         if self.state =='walk':
             if self.random ==1:
-                self.walk1.clip_draw(0, 0, 26, 35, self.x, self.y )
-            else:
-                self.walk2.clip_draw(0, 0, 26, 35, self.x, self.y)
+                self.walk1.clip_draw(0, 0, 26, 35, self.x, self.y,150,150 )
+            elif self.random ==0:
+                self.walk2.clip_draw(0, 0, 26, 35, self.x, self.y,150,150)
         elif self.state == 'break':
-            self.broken.clip_draw(0, 0, 26, 35, self.x, self.y)
+            self.broken.clip_draw(0, 0, 26, 35, self.x, self.y,150,150)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
             draw_rectangle(*self.get_bb())
 
@@ -87,6 +88,7 @@ class Sword:
             self.broken[int(self.frame)].clip_draw(0, 0, 17, 29, self.x, self.y)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
             draw_rectangle(*self.get_bb())
+
 class Door:
     image = None
     def __init__(self,state,next):
@@ -146,7 +148,6 @@ class Door:
                         server.willx = 600
                         server.willy = 100
                 self.sound.play()
-                print(server.grass_level)
                 server.grass.enter()
 
                 main_state.exit()
@@ -164,3 +165,43 @@ class Door:
         draw_rectangle(*self.get_bb())
 
 
+class Endtree:
+    image = None
+
+    def __init__(self):
+        self.x, self.y = 600,200
+        self.now_max_frame = 35
+        self.walk = {}
+        self.frame = 0
+        self.broken = {}
+        self.state = 'walk'
+        if Endtree.image == None:
+            for i in range(0, 35):
+                self.walk[i] = load_image('resource/background/object/Village_BigTree_animation_%d.png' % (i + 1))
+            for i in range(0, 19):
+                self.broken[i] = load_image('resource/background/object/Village_BigTree_hitanimation_%d.png' % (i + 1))
+
+    def update(self, will):
+        # global now_max_frame
+        if main_state.collide(will, self) == True and will.doing_count['key_f']:
+            self.state = 'break'
+            if self.state == 'break':
+                self.now_max_frame =19
+                if self.frame >= 18:
+                    self.frame = 18
+                    delay(3)
+                    main_state.exit()
+                    game_framework.run(title_state)
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
+
+    def get_bb(self):
+        return self.x - 80, self.y - 90, self.x + 80, self.y + 90
+
+    def draw(self):
+        # self.walk1.draw(100,190)
+        if self.state == 'walk':
+            self.walk[int(self.frame)].clip_draw(0, 0, 157, 174, self.x, self.y)
+        elif self.state == 'break':
+            self.broken[int(self.frame)].clip_draw(0, 0, 157, 174, self.x, self.y)
+            # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
+            draw_rectangle(*self.get_bb())
