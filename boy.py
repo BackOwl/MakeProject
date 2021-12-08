@@ -174,6 +174,9 @@ class RunState:
         #will.x += will.velocity * game_framework.frame_time
         will.x = clamp(server.clampx, will.x, 1200 - server.clampx)
         will.y = clamp(server.clampy, will.y, 600 - server.clampy)
+        will.sound_stack +=1
+        if will.sound_stack%45 ==0:will.sound_walk.play()
+
 
     def draw(will):
         will.image0.clip_draw(int(will.frame) * 35, will.direction * 35, 35, 35, will.x, will.y)
@@ -233,6 +236,8 @@ class JumpState:
         will.jumptimer -= 5
         if will.jumptimer ==0:
             will.add_event(JUMP_TIMER)
+        will.sound_stack += 1
+        if will.sound_stack % 45 == 0: will.sound_roll.play()
 
         will.x = clamp(server.clampx, will.x, 1200 - server.clampx)
         will.y = clamp(server.clampy, will.y, 600 - server.clampy)
@@ -464,6 +469,7 @@ class Will:
         self.cur_state.enter(self, None)
         self.attack_score = 0
 
+        self.sound_stack = 0
         self.sound_walk = load_wav('resource/sound/Will_Walk.wav')
         self.sound_attack = load_wav('resource/sound/Will_Sword.wav')
         self.sound_roll = load_wav('resource/sound/Will_Roll.wav')
