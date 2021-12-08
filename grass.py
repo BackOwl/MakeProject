@@ -8,7 +8,7 @@ class Grass:
     def __init__(self):
         self.image0 = load_image('resource/background/background_Level003.png')
         self.image1 = load_image('resource/background/backgroundWalls_Level0.png')
-        server.Hanari_count = 15
+        server.Hanari_count = 3
         server.slime_count = 0
         server.golem_count = 0
         server.sword_count = 0
@@ -21,10 +21,11 @@ class Grass:
 
     def enter(self):
         if server.grass_level ==0:
-            server.Hanari_count =15
+            server.Hanari_count =3
             server.slime_count =0
             server.golem_count =0
-            server.sword_count =1
+            server.sword_count =0
+            server.tree_count = 1
             server.clampy = 100
             server.door_state = {"up": False, "down": False, "right": True, "left": False}
         elif server.grass_level == 1:
@@ -32,6 +33,7 @@ class Grass:
             server.slime_count = 0
             server.golem_count = 0
             server.sword_count = 1
+            server.tree_count = 0
             server.HP =50
             server.clampy = 250
             server.door_state = {"up": False, "down": False, "right": True, "left": True}
@@ -77,6 +79,7 @@ class Level2:
             server.slime_count =5
             server.golem_count =2
             server.sword_count =0
+            server.tree_count = 0
             server.clampy = 100
             server.door_state = {"up": False, "down": True, "right": False, "left": True}
         elif server.grass_level == 1:
@@ -84,7 +87,8 @@ class Level2:
             server.slime_count = 10
             server.golem_count = 0
             server.sword_count = 0
-            server.door_state = {"up": False, "down": False, "right": True, "left": True}
+            server.tree_count = 0
+            server.door_state = {"up": True, "down": False, "right": True, "left": False}
     def get_bb(self):
         return 0, 0, 0, 0
 
@@ -112,6 +116,7 @@ class Level3:
             server.slime_count =10
             server.golem_count =2
             server.sword_count =1
+            server.tree_count = 0
             server.door_state = {"up": False, "down": True, "right": False, "left": True}
         elif server.grass_level == 1:
             server.Hanari_count = 0

@@ -70,6 +70,7 @@ def enter():
         server.grass = Level2()
     elif server.grasslevel ==2:
         server.grass = Level3()
+    server.grass.enter()
     game_world.add_object(server.grass, 0)
     server.monsters = [BabySlime() for i in range(server.slime_count)]+[Stone() for i in range(server.golem_count)]
     game_world.add_objects(server.monsters, 1)
