@@ -252,9 +252,9 @@ class AttackState:
     def enter(will, event):
         will.jumptimer = 1600
         if will.state == 'short':
-            will.frame = will.attack_count * 4
+            will.frame = will.attack_count * 4-4
         elif will.state == 'big':
-            will.frame = will.attack_count * 10
+            will.frame = will.attack_count * 10-10
     def exit(will, event):
         #if event == SPACE:
             #will.depend() // 방패
@@ -307,8 +307,8 @@ class AttackState:
                         will.doing_count.update(attack=False)
                         attack_count = 0
                 elif will.attack_count == 4:
-                    will.frame = ( will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
-                    if will.frame > 39:
+                    will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 40
+                    if will.frame >= 38:
                         will.doing_count.update(attack=False)
                         attack_count = 0
             for monster in server.monsters:
@@ -387,10 +387,12 @@ class ChangeSword:
     def do(will):
         if will.state == 'big':
             will.state = 'short'
+            server.rich =10
             print(will.state)
             will.add_event(KEY_F)
         elif will.state == 'short':
             will.state = 'big'
+            server.rich=20
             print(will.state)
             will.add_event(KEY_F)
     def draw(will):
@@ -436,7 +438,7 @@ class Will:
                           ,"idle":True,"key_f":False}
         self.state = 'short'
         self.attack_count =0
-        self.HP = 100
+        self.HP = 50
         for i in range(0, 40):
             self.long_up[i] = load_image('resource/Will/bigsword/Will_BigSwordCombo_Animation_up_%d.png' % (i+1))
             self.long_down[i] = load_image('resource/Will/bigsword/Will_BigSwordCombo_Animation_Down_%d.png' % (i + 1))
@@ -462,6 +464,7 @@ class Will:
         for i in range(11):
             self.die[i] = load_image('resource/Will/Die/Death of Will_Export_%d.png' % (i+1))
         self.font = load_font('ENCR10B.TTF', 16)
+        self.image_HP = load_image('resource/Will/will_HP.png')
         self.dir = 1
         self.velocity_x = 0
         self.velocity_y = 0
@@ -481,13 +484,13 @@ class Will:
 
     def get_bb(self):
         if self.direction ==0:
-            return self.x - 20, self.y - 20, self.x + 20, self.y + 30
+            return self.x - 20, self.y - 20, self.x + 20, self.y + 20+server.rich
         elif self.direction ==1:
-            return self.x - 20, self.y - 30, self.x + 20, self.y + 20
+            return self.x - 20, self.y - 20-server.rich, self.x + 20, self.y + 20
         elif self.direction == 2:
-            return self.x - 30, self.y - 20, self.x + 20, self.y + 20
+            return self.x - 20-server.rich, self.y - 20, self.x + 20, self.y + 20
         elif self.direction == 3:
-            return self.x - 20, self.y - 20, self.x + 30, self.y + 20
+            return self.x - 20, self.y - 20, self.x + 20+server.rich, self.y + 20
 
     def depend(self):
         pass
@@ -542,6 +545,8 @@ class Will:
         self.font.draw(self.x - 60, self.y + 70, '(HP: %3.2f)' % self.HP, (255, 0, 0))
         debug_print('velocity_x :' + str(self.velocity_x) + '  Dir:' + str(self.dir) + 'State: ' + self.cur_state.__name__+' frame :'+
                     str(self.now_max_frame) + 'combo: ' + str(self.attack_count)+':'+str(self.frame))
+        if self.HP > 100: self.HP = 100
+        self.image_HP.clip_draw(0,0,(int)(self.HP/100*200),15,self.x , self.y + 40)
         #for ball in self.team:
             #ball.draw()
         #fill here

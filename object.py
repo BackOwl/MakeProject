@@ -38,6 +38,8 @@ class Hanari:
         # global now_max_frame
         if main_state.collide(will,self)==True:
             self.state = 'break'
+            will.HP = (will.HP + 20)
+            if will.HP > 100 : will.HP =100
         #self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
 
     def get_bb(self):
@@ -73,6 +75,8 @@ class Sword:
         # global now_max_frame
         if main_state.collide(will,self)==True:
             self.state = 'break'
+            will.HP = (will.HP + 100)
+            if will.HP > 100 : will.HP =100
             if self.state == 'break':
                 self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
                 if self.frame >=2:
