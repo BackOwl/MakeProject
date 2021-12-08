@@ -54,7 +54,8 @@ class Grass:
 
 class Level2:
     def __init__(self):
-        self.image0 = load_image('resource/background/Dungeon4_Level0_Background.png')
+        self.image0 = load_image('resource/background/map_2_1.png')
+        self.image0_1 = load_image('resource/background/map_2_2.png')
         self.image1 = load_image('resource/background/backgroundWalls_Level2.png')
 
     def update(self, mx=0, my=0):
@@ -65,7 +66,7 @@ class Level2:
             self.image0.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
             self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
         elif server.grass_level == 1:
-            self.image0.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+            self.image0_1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
             self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
 
     # fill here
@@ -89,6 +90,7 @@ class Level2:
 class Level3:
     def __init__(self):
         self.image0 = load_image('resource/background/background_Level_0_Walls.png')
+        self.image0_1 = load_image('resource/background/map_3_1.png')
         self.image1 = load_image('resource/background/background_Level0.png')
 
     def update(self, mx=0, my=0):
@@ -96,7 +98,7 @@ class Level3:
 
     def draw(self):
         if server.grass_level == 0:
-            self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
+            self.image0_1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
             self.image0.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
         elif server.grass_level == 1:
             self.image1.clip_draw(0, 0, 640, 360, 600, 300, 1200, 600)
