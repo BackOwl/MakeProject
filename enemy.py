@@ -41,12 +41,12 @@ class BabySlime:
                 self.attackDown[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Down_%d.png' % (i + 1))
                 self.attackRight[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Right_%d.png' % (i + 1))
                 self.attackLeft[i] = load_image('resource/enemy/orangeslime/ForestBabySlime_Attack_Left_%d.png' % (i + 1))
-
+            self.image_HP = load_image('resource/Will/enemy_HP.png')
     def update(self, will):
         # global now_max_frame
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
         self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 30+self.random, 10)
-        self.attack_state = check_state(will.x, will.y, self.x, self.y, self.state)
+        self.attack_state = check_state(will.x, will.y, self.x, self.y, False)
         if self.state == False:
             if main_state.collide(will, self) == False:
                 will.sound_stack += 1
@@ -89,6 +89,7 @@ class BabySlime:
         if self.attack_score ==1:
             self.attack_image.clip_draw(0, 0, 35, 35,self.x, self.y, 20, 20)
             self.attack_score =0
+        self.image_HP.clip_draw(0, 0, (int)(self.hp / 60 * 100)*2, 10, self.x - 35, self.y + 40)
 
 
 class Stone:
@@ -123,12 +124,11 @@ class Stone:
                 self.attackDown[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_down_%d.png' % (i + 1))
                 self.attackRight[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_right_%d.png' % (i + 1))
                 self.attackLeft[i] = load_image('resource/enemy/stone/enemies_golem butler_attack_left_%d.png' % (i + 1))
-
+            self.image_HP = load_image('resource/Will/enemy_HP.png')
     def update(self, will):
         # global now_max_frame
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
         self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 50+self.random, 20)
-
         self.attack_state = check_state(will.x, will.y,self.x, self.y, False)
         if self.state == False:
             if main_state.collide(will, self)==False:
@@ -179,6 +179,7 @@ class Stone:
         if self.attack_score ==1:
             self.attack_image[self.direction].clip_draw(0, 0, 55, 60, self.x, self.y)
             self.attack_score =0
+        self.image_HP.clip_draw(0, 0, (int)(self.hp / 60 * 100) * 2, 10, self.x - 80, self.y + 40)
 
 
 def check_attack(Nx, Ny, x, y, want, speed):

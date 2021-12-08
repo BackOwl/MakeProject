@@ -22,8 +22,8 @@ class Grass:
     def enter(self):
         if server.grass_level ==0:
             server.Hanari_count =3
-            server.slime_count =0
-            server.golem_count =0
+            server.slime_count =1
+            server.golem_count =1
             server.sword_count =0
             server.tree_count = 1
             server.clampy = 100
