@@ -107,6 +107,7 @@ class Door:
         self.state = 'walk'
         self.next = next
         self.switch =state
+        self.sound = load_wav('resource/sound/Will_Potion.wav')
         if Door.image ==None:
             self.walk1 = load_image('resource/background/door.png')
 
@@ -144,6 +145,7 @@ class Door:
                     elif self.switch == 'up':
                         server.willx = 600
                         server.willy = 100
+                self.sound.play()
                 print(server.grass_level)
                 server.grass.enter()
 

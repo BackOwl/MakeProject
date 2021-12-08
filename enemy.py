@@ -29,8 +29,9 @@ class BabySlime:
         self.attackUp, self.attackLeft, self.attackRight, self.attackDown = {}, {}, {}, {}
         self.state = 'walk'
         self.random= random.randint(0,5)
-        self.hp = 5
+        self.hp = 50
         self.attack_score = 0
+        self.die = load_wav('resource/sound/Slimeattack.wav')
         self.attack_image =load_image('resource/enemy/orangeslime/forest_babyslime_Damage.png')
         if BabySlime.image ==None:
             for i in range(0, 5):
@@ -47,7 +48,8 @@ class BabySlime:
         self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 30+self.random, 10)
         if self.state == False:
             if main_state.collide(will, self) == False:
-                will.attacked()
+                will.sound_stack += 1
+                if will.sound_stack % 10 == 0: will.attacked()
 
         self.attack_state = check_state(will.x, will.y, self.x, self.y, self.state)
     def get_bb(self):
@@ -56,6 +58,7 @@ class BabySlime:
         self.attack_image.clip_draw(0, 0, 35, 35, self.x, self.y)
         self.attack_score =1
         if self.hp <= 0:
+            self.die.play()
             server.monsters.remove(self)
             game_world.remove_object(self)
             self.hp =0
@@ -96,9 +99,10 @@ class Stone:
         self.attack_image ={}
         self.state = 'walk'
         self.random = random.randint(0, 10)
-        self.hp = 9
+        self.hp = 90
         self.direction =0
         self.attack_score =0
+        self.die = load_wav('resource/sound/Golemattack.wav')
         self.attack_image[0] =load_image('resource/enemy/stone/damage/Enemies_Stone Butler_Damaged_Up_White.png')
         self.attack_image[1] = load_image('resource/enemy/stone/damage/Enemies_Stone Butler_Damaged_Down_White.png')
         self.attack_image[2] = load_image('resource/enemy/stone/damage/Enemies_Stone Butler_Damaged_Left_White.png')
@@ -124,7 +128,8 @@ class Stone:
         self.attack_state = check_state(will.x, will.y,self.x, self.y, False)
         if self.state == False:
             if main_state.collide(will, self)==False:
-                will.attacked()
+                will.sound_stack+=1
+                if will.sound_stack %10 ==0:will.attacked()
 
     def get_bb(self):
         return self.x - 25, self.y - 25, self.x + 25, self.y + 25
@@ -136,6 +141,7 @@ class Stone:
             server.monsters.remove(self)
             game_world.remove_object(self)
             self.hp = 0
+            self.die.play()
         print("slime attacked")
     def draw(self):
         if self.state == True:

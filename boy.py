@@ -7,7 +7,7 @@ import main_state
 # Boy Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
-RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1700.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
@@ -237,7 +237,7 @@ class JumpState:
         if will.jumptimer ==0:
             will.add_event(JUMP_TIMER)
         will.sound_stack += 1
-        if will.sound_stack % 45 == 0: will.sound_roll.play()
+        if will.sound_stack % 60 == 0: will.sound_roll.play()
 
         will.x = clamp(server.clampx, will.x, 1200 - server.clampx)
         will.y = clamp(server.clampy, will.y, 600 - server.clampy)
@@ -492,7 +492,7 @@ class Will:
     def attacked(self):
         self.attack_image[self.direction].clip_draw(0, 0, 35, 35, self.x, self.y)
         self.attack_score =1
-        self.HP -=0.1
+        self.HP -=1
         if self.HP <= 0:
             self.add_event(DEAD_HP)
             self.HP =0
