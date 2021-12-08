@@ -46,11 +46,11 @@ class Hanari:
         #self.walk1.draw(100,190)
         if self.state =='walk':
             if self.random ==1:
-                self.walk1.clip_draw(0, 0, 26, 35, self.x, self.y,150,150 )
+                self.walk1.clip_draw(0, 0, 26, 35, self.x, self.y)
             elif self.random ==0:
-                self.walk2.clip_draw(0, 0, 26, 35, self.x, self.y,150,150)
+                self.walk2.clip_draw(0, 0, 26, 35, self.x, self.y)
         elif self.state == 'break':
-            self.broken.clip_draw(0, 0, 26, 35, self.x, self.y,150,150)
+            self.broken.clip_draw(0, 0, 26, 35, self.x, self.y)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
             draw_rectangle(*self.get_bb())
 
@@ -75,7 +75,7 @@ class Sword:
             self.state = 'break'
             if self.state == 'break':
                 self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
-                if self.frame ==2:
+                if self.frame >=2:
                     self.frame =2
 
     def get_bb(self):
@@ -83,9 +83,9 @@ class Sword:
     def draw(self):
         #self.walk1.draw(100,190)
         if self.state =='walk':
-            self.walk1.clip_draw(0, 0, 17, 29, self.x, self.y )
+            self.walk1.clip_draw(0, 0, 17, 29, self.x, self.y ,50,70)
         elif self.state == 'break':
-            self.broken[int(self.frame)].clip_draw(0, 0, 17, 29, self.x, self.y)
+            self.broken[int(self.frame)].clip_draw(0, 0, 17, 29, self.x, self.y,50,70)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
             draw_rectangle(*self.get_bb())
 

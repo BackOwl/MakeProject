@@ -117,6 +117,7 @@ class Level3:
             server.slime_count = 0
             server.golem_count = 5
             server.sword_count = 1
+            server.tree_count =1
             server.door_state = {"up": True, "down": False, "right": False, "left": False}
     def get_bb(self):
         return 0, 0, 0, 0
