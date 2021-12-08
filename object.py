@@ -180,7 +180,7 @@ class Endtree:
                 self.walk[i] = load_image('resource/background/object/Village_BigTree_animation_%d.png' % (i + 1))
             for i in range(0, 19):
                 self.broken[i] = load_image('resource/background/object/Village_BigTree_hitanimation_%d.png' % (i + 1))
-
+        self.die = load_music('resource/sound/End_Tree.mp3')
     def update(self, will):
         # global now_max_frame
         if main_state.collide(will, self) == True and will.doing_count['key_f']:
@@ -189,6 +189,7 @@ class Endtree:
                 self.now_max_frame =19
                 if self.frame >= 18:
                     self.frame = 18
+                    self.die.play(3)
                     delay(3)
                     main_state.exit()
                     game_framework.run(title_state)

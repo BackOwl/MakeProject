@@ -7,14 +7,18 @@ import background
 name = "TitleState"
 image = None
 title = None
+music =None
 
 
 def enter():
     global image
     global title
+    global music
     #image =load_image('resource/framebackground/title.jpg') #타이틀 사진 추가 해야함
     image = background.greenwater()
     title =load_image('resource/background/main/start_enter.png')
+    music = load_music('resource/sound/title_song.mp3')
+    music.repeat_play()
 
 
 def exit():
@@ -34,6 +38,7 @@ def handle_events():
                 game_framework.quit()
             elif( event.type, event.key) == ( SDL_KEYDOWN, SDLK_SPACE):
                 game_framework.change_state(main_state)
+                music.stop()
 
 
 def draw():
