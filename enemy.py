@@ -46,12 +46,16 @@ class BabySlime:
         # global now_max_frame
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
         self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 30+self.random, 10)
+        self.attack_state = check_state(will.x, will.y, self.x, self.y, self.state)
         if self.state == False:
             if main_state.collide(will, self) == False:
                 will.sound_stack += 1
-                if will.sound_stack % 10 == 0: will.attacked()
+                if will.sound_stack % 2 == 0:
+                    server.will.HP = (server.will.HP - 5)
+                    server.HP = server.will.HP
+                    will.attacked()
 
-        self.attack_state = check_state(will.x, will.y, self.x, self.y, self.state)
+
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
     def attacked(self):

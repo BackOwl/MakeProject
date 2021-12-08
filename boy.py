@@ -230,8 +230,8 @@ class JumpState:
     def do(will):
         #will.frame = (will.frame + 1) % 8
         will.frame = (will.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % will.now_max_frame
-        will.x = (1 - 0.5) * will.x + 0.5 * (will.x+will.velocity_x*2*game_framework.frame_time)
-        will.y = (1 - 0.5) * will.y + 0.5 * (will.y+will.velocity_y*2*game_framework.frame_time)
+        will.x = (1 - 0.5) * will.x + 0.5 * (will.x+will.velocity_x*3*game_framework.frame_time)
+        will.y = (1 - 0.5) * will.y + 0.5 * (will.y+will.velocity_y*3*game_framework.frame_time)
         #will.x += will.velocity * game_framework.frame_time
         will.jumptimer -= 5
         if will.jumptimer ==0:
@@ -438,7 +438,7 @@ class Will:
                           ,"idle":True,"key_f":False}
         self.state = 'short'
         self.attack_count =0
-        self.HP = 50
+        self.HP = server.HP
         for i in range(0, 40):
             self.long_up[i] = load_image('resource/Will/bigsword/Will_BigSwordCombo_Animation_up_%d.png' % (i+1))
             self.long_down[i] = load_image('resource/Will/bigsword/Will_BigSwordCombo_Animation_Down_%d.png' % (i + 1))
@@ -500,7 +500,8 @@ class Will:
     def attacked(self):
         self.attack_image[self.direction].clip_draw(0, 0, 35, 35, self.x, self.y)
         self.attack_score =1
-        self.HP -=1
+        self.HP -=5
+        server.HP -=5
         if self.HP <= 0:
             self.add_event(DEAD_HP)
             self.HP =0
@@ -546,7 +547,7 @@ class Will:
         debug_print('velocity_x :' + str(self.velocity_x) + '  Dir:' + str(self.dir) + 'State: ' + self.cur_state.__name__+' frame :'+
                     str(self.now_max_frame) + 'combo: ' + str(self.attack_count)+':'+str(self.frame))
         if self.HP > 100: self.HP = 100
-        self.image_HP.clip_draw(0,0,(int)(self.HP/100*200),15,self.x , self.y + 40)
+        self.image_HP.clip_draw(0,0,(int)(self.HP/60*100)*2,10,self.x-80 , self.y + 40)
         #for ball in self.team:
             #ball.draw()
         #fill here

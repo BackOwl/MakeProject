@@ -8,10 +8,10 @@ class Grass:
     def __init__(self):
         self.image0 = load_image('resource/background/background_Level003.png')
         self.image1 = load_image('resource/background/backgroundWalls_Level0.png')
-        server.Hanari_count = 5
+        server.Hanari_count = 15
         server.slime_count = 0
         server.golem_count = 0
-        server.sword_count = 1
+        server.sword_count = 0
         self.image_level2_0 = load_image('resource/background/Dungeon1_Level0_LowerDetail_7.png')
         self.tile1 = load_image('resource/background/background_Level05.png')
         self.tile2 = load_image('resource/background/background_Level00.png')
@@ -24,14 +24,15 @@ class Grass:
             server.Hanari_count =15
             server.slime_count =0
             server.golem_count =0
-            server.sword_count =0
+            server.sword_count =1
             server.clampy = 100
             server.door_state = {"up": False, "down": False, "right": True, "left": False}
         elif server.grass_level == 1:
             server.Hanari_count = 0
             server.slime_count = 0
             server.golem_count = 0
-            server.sword_count = 0
+            server.sword_count = 1
+            server.HP =50
             server.clampy = 250
             server.door_state = {"up": False, "down": False, "right": True, "left": True}
 

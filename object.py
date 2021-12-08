@@ -22,7 +22,7 @@ FRAMES_PER_ACTION = 8
 class Hanari:
     image = None
     def __init__(self):
-        self.x, self.y = random.randint(300, 400), random.randint(100, 300)
+        self.x, self.y = random.randint(300, 600), random.randint(100, 300)
         self.random = random.randint(0,1)
         self.now_max_frame = 5
         self.walk1 = {}
@@ -38,8 +38,9 @@ class Hanari:
         # global now_max_frame
         if main_state.collide(will,self)==True:
             self.state = 'break'
-            will.HP = (will.HP + 20)
-            if will.HP > 100 : will.HP =100
+            server.will.HP = ( server.will.HP + 10)
+            server.HP = server.will.HP
+            if  server.will.HP > 100 :  server.will.HP =100
         #self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
 
     def get_bb(self):
@@ -59,7 +60,7 @@ class Hanari:
 class Sword:
     image = None
     def __init__(self):
-        self.x, self.y = random.randint(300, 900), random.randint(100, 400)
+        self.x, self.y = random.randint(300, 900), random.randint(300, 350)
         self.now_max_frame = 3
         self.walk1 = {}
         self.frame=0
@@ -75,8 +76,9 @@ class Sword:
         # global now_max_frame
         if main_state.collide(will,self)==True:
             self.state = 'break'
-            will.HP = (will.HP + 100)
-            if will.HP > 100 : will.HP =100
+            server.will.HP = ( server.will.HP + 50)
+            if  server.will.HP > 100 :  server.will.HP =100
+            server.HP = server.will.HP
             if self.state == 'break':
                 self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % self.now_max_frame
                 if self.frame >=2:
