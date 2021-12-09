@@ -32,6 +32,7 @@ class BabySlime:
         self.hp = 50
         self.attack_score = 0
         self.die = load_wav('resource/sound/Slimeattack.wav')
+        self.die.set_volume(20)
         self.attack_image =load_image('resource/enemy/orangeslime/forest_babyslime_Damage.png')
         if BabySlime.image ==None:
             for i in range(0, 5):
@@ -48,21 +49,18 @@ class BabySlime:
         self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 30+self.random, 10)
         self.attack_state = check_state(will.x, will.y, self.x, self.y, False)
         if self.state == False:
-            if main_state.collide(will, self) == False:
+            if main_state.attack_collide(will, self, will.direction) == False:
                 will.sound_stack += 1
-                if will.sound_stack % 2 == 0:
-                    server.will.HP = (server.will.HP - 5)
-                    server.HP = server.will.HP
-                    will.attacked()
+                if will.sound_stack % 10 == 0: will.attacked()
 
 
     def get_bb(self):
-        return self.x - 15, self.y - 15, self.x + 15, self.y + 15
+        return self.x - 20, self.y - 20, self.x + 20, self.y + 20
     def attacked(self):
         self.attack_image.clip_draw(0, 0, 35, 35, self.x, self.y)
         self.attack_score =1
+        if self.hp==20: self.die.play()
         if self.hp <= 0:
-            self.die.play()
             server.monsters.remove(self)
             game_world.remove_object(self)
             self.hp =0
@@ -85,7 +83,7 @@ class BabySlime:
                 self.attackLeft[int(self.frame)].clip_draw(0, 0, 35, 35, self.x, self.y, 20, 20)
                 self.direction=3
         # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         if self.attack_score ==1:
             self.attack_image.clip_draw(0, 0, 35, 35,self.x, self.y, 20, 20)
             self.attack_score =0
@@ -108,6 +106,7 @@ class Stone:
         self.direction =0
         self.attack_score =0
         self.die = load_wav('resource/sound/Golemattack.wav')
+        self.die.set_volume(20)
         self.attack_image[0] =load_image('resource/enemy/stone/damage/Enemies_Stone Butler_Damaged_Up_White.png')
         self.attack_image[1] = load_image('resource/enemy/stone/damage/Enemies_Stone Butler_Damaged_Down_White.png')
         self.attack_image[2] = load_image('resource/enemy/stone/damage/Enemies_Stone Butler_Damaged_Left_White.png')
@@ -131,21 +130,21 @@ class Stone:
         self.x, self.y, self.state = check_attack(will.x, will.y, self.x, self.y, 50+self.random, 20)
         self.attack_state = check_state(will.x, will.y,self.x, self.y, False)
         if self.state == False:
-            if main_state.collide(will, self)==False:
+            if main_state.attack_collide(will, self,will.direction)==False:
                 will.sound_stack+=1
-                if will.sound_stack %10 ==0:will.attacked()
+                if will.sound_stack %35 ==0:will.attacked()
 
     def get_bb(self):
-        return self.x - 25, self.y - 25, self.x + 25, self.y + 25
+        return self.x - 30, self.y - 30, self.x + 30, self.y + 30
 
     def attacked(self):
         self.attack_image[self.direction].clip_draw(0, 0, 35, 35, self.x, self.y)
         self.attack_score = 1
+        if self.hp == 20: self.die.play()
         if self.hp <= 0:
             server.monsters.remove(self)
             game_world.remove_object(self)
             self.hp = 0
-            self.die.play()
         print("slime attacked")
     def draw(self):
         if self.state == True:
@@ -175,7 +174,7 @@ class Stone:
                 self.attackLeft[int(self.frame)].clip_draw(0, 0, 55, 60, self.x, self.y)
                 self.direction = 2
         # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         if self.attack_score ==1:
             self.attack_image[self.direction].clip_draw(0, 0, 55, 60, self.x, self.y)
             self.attack_score =0

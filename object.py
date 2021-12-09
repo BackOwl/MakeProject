@@ -55,7 +55,7 @@ class Hanari:
         elif self.state == 'break':
             self.broken.clip_draw(0, 0, 26, 35, self.x, self.y)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
-            draw_rectangle(*self.get_bb())
+            #draw_rectangle(*self.get_bb())
 
 class Sword:
     image = None
@@ -93,7 +93,7 @@ class Sword:
         elif self.state == 'break':
             self.broken[int(self.frame)].clip_draw(0, 0, 17, 29, self.x, self.y,50,70)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
-            draw_rectangle(*self.get_bb())
+            #draw_rectangle(*self.get_bb())
 
 class Door:
     image = None
@@ -116,6 +116,7 @@ class Door:
         self.next = next
         self.switch =state
         self.sound = load_wav('resource/sound/Will_Potion.wav')
+        self.sound.set_volume(20)
         if Door.image ==None:
             self.walk1 = load_image('resource/background/door.png')
 
@@ -168,7 +169,7 @@ class Door:
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
         else:
             self.walk1.clip_draw(130 * self.frame, 0, 130, 130, self.x, self.y,195,195)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
 
 class Endtree:
@@ -211,4 +212,4 @@ class Endtree:
         elif self.state == 'break':
             self.broken[int(self.frame)].clip_draw(0, 0, 157, 174, self.x, self.y)
             # self.image0.clip_draw(0, 0, 35, 35, self.x, self.y)
-            draw_rectangle(*self.get_bb())
+            #draw_rectangle(*self.get_bb())

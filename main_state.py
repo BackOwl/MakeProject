@@ -15,6 +15,7 @@ from ball import Ball
 
 name = "MainState"
 image = None
+music = None
 
 
 balls = []
@@ -35,26 +36,20 @@ def attack_collide(a,b,dir):# 왼쪽을 맞는 거, 오른쪽을 때리는 거
     left_a, bottom_a, right_a, top_a = a.get_bb()
     left_b, bottom_b, right_b, top_b = b.get_bb()
 
-    if dir ==0:# 위
-        if left_a > right_b: return False
-        if right_a < left_b: return False
-        if top_a < bottom_b: return False
-        if bottom_a > top_b: return False
-    elif dir ==1:# 아래
-        if left_a > right_b: return False
-        if right_a < left_b: return False
-        if top_a < bottom_b: return False
-        if bottom_a > top_b: return False
-    elif dir==2:# 왼
-        if left_a > right_b: return False
-        if right_a < left_b: return False
-        if top_a < bottom_b: return False
-        if bottom_a > top_b: return False
-    elif dir ==3: # 오
-        if left_a > right_b: return False
-        if right_a < left_b: return False
-        if top_a < bottom_b: return False
-        if bottom_a > top_b: return False
+    if dir == 0:
+        top_a -= server.rich
+    elif dir == 1:
+        bottom_a+= server.rich
+    elif dir == 2:
+        left_a +=server.rich
+    elif dir == 3:
+        right_a-=  server.rich
+
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
 
     return True
 
@@ -119,11 +114,15 @@ def wait_for_keydown():
                 loop = False
 
 def resume():
+    music1 = load_music('resource/sound/play_song.wav')
+    music1.set_volume(40)
+    music1.repeat_play()
     pass
 
 
 def handle_events():
     events = get_events()
+
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()

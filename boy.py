@@ -175,7 +175,8 @@ class RunState:
         will.x = clamp(server.clampx, will.x, 1200 - server.clampx)
         will.y = clamp(server.clampy, will.y, 600 - server.clampy)
         will.sound_stack +=1
-        if will.sound_stack%45 ==0:will.sound_walk.play()
+        if will.sound_stack%45 ==0:
+            will.sound_walk.play()
 
 
     def draw(will):
@@ -237,7 +238,8 @@ class JumpState:
         if will.jumptimer ==0:
             will.add_event(JUMP_TIMER)
         will.sound_stack += 1
-        if will.sound_stack % 60 == 0: will.sound_roll.play()
+        if will.sound_stack % 60 == 0:
+            will.sound_roll.play()
 
         will.x = clamp(server.clampx, will.x, 1200 - server.clampx)
         will.y = clamp(server.clampy, will.y, 600 - server.clampy)
@@ -312,7 +314,7 @@ class AttackState:
                         will.doing_count.update(attack=False)
                         attack_count = 0
             for monster in server.monsters:
-                if main_state.attack_collide(monster, will,will.direction):
+                if main_state.collide(monster, will):
                     monster.hp -= 1
                     monster.attacked()
                     pass
@@ -392,7 +394,7 @@ class ChangeSword:
             will.add_event(KEY_F)
         elif will.state == 'short':
             will.state = 'big'
-            server.rich=20
+            server.rich=40
             print(will.state)
             will.add_event(KEY_F)
     def draw(will):
@@ -478,9 +480,13 @@ class Will:
         self.attack_score = 0
 
         self.sound_stack = 0
+
         self.sound_walk = load_wav('resource/sound/Will_Walk.wav')
+        self.sound_walk.set_volume(20)
         self.sound_attack = load_wav('resource/sound/Will_Sword.wav')
+        self.sound_attack.set_volume(20)
         self.sound_roll = load_wav('resource/sound/Will_Roll.wav')
+        self.sound_roll.set_volume(20)
 
     def get_bb(self):
         if self.direction ==0:
@@ -551,7 +557,7 @@ class Will:
         #for ball in self.team:
             #ball.draw()
         #fill here
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
 
     def handle_event(self, event):
